@@ -5,7 +5,7 @@ namespace TheoryProtocol.Models {
 	[FirestoreData]
 	public class User {
         [FirestoreProperty]
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         [FirestoreProperty]
         public string Username { get; set; }
