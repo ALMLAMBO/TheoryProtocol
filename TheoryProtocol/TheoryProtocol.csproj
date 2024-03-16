@@ -18,5 +18,10 @@
   <ItemGroup>
     <ProjectReference Include="..\TheoryProtocol.Models\TheoryProtocol.Models.csproj" />
   </ItemGroup>
+
+  
+  <ItemGroup>
+    <Folder Include="Credentials\" />
+  </ItemGroup>
   
 </Project>
