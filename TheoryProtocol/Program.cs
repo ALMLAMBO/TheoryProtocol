@@ -1,15 +1,31 @@
+using Google.Cloud.Firestore;
 using MudBlazor.Services;
 using TheoryProtocol.Components;
+using TheoryProtocol.Models;
+using TheoryProtocol.Repositories;
 using TheoryProtocol.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
-	.AddInteractiveServerComponents();
+.AddInteractiveServerComponents();
 
 builder.Services.AddMudServices();
-builder.Services.AddSingleton<FirestoreService>();
+
+string filePath = Directory.GetFiles("./Credentials")[0];
+Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", filePath);
+string projectId = "theorycontrol-8248e";
+FirestoreDb db = FirestoreDb.Create(projectId);
+UserRepository userRepository = new UserRepository(projectId, "users");
+
+// Repositories
+builder.Services.AddScoped<IFirestoreRepository<User>>(sp => userRepository);
+builder.Services.AddScoped<IFirestoreRepository<Canvas>>(sp => new CanvasRepository(projectId, "canvas"));
+
+// Services
+builder.Services.AddScoped<UserService>(sp => new UserService(userRepository));
+builder.Services.AddScoped<FirestoreService>();
 
 var app = builder.Build();
 
