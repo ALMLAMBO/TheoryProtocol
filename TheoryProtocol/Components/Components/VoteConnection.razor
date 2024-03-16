@@ -1,0 +1,27 @@
+<MudDialog>
+    <DialogContent>
+        <MudTextField @bind-Value="@_comment.Content" Label="Comment"></MudTextField>
+        <MudCheckBox @bind-Value="@vote" Color="Color.Primary" Label="Vote for connection"></MudCheckBox>
+    </DialogContent>
+    <DialogActions>
+        <MudButton @onclick="Cancel">Cancel</MudButton>
+        <MudButton @onclick="Submit">Submit</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    class ConnectionComment
+    {
+        public string Content { get; set; }
+        public DateTime CreatedAt { get; set; }
+    }
+
+    bool vote;
+
+    ConnectionComment _comment = new ConnectionComment();
+    
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    void Cancel() => MudDialog.Cancel();    
+}

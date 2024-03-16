@@ -1,4 +1,5 @@
 using Google.Cloud.Firestore;
+using MudBlazor;
 using MudBlazor.Services;
 using Syncfusion.Blazor;
 using Syncfusion.Licensing;
@@ -14,6 +15,7 @@ builder.Services.AddRazorComponents()
 .AddInteractiveServerComponents();
 
 builder.Services.AddMudServices();
+builder.Services.AddSingleton<IDialogService, DialogService>();
 builder.Services.AddSyncfusionBlazor();
 SyncfusionLicenseProvider.RegisterLicense(
 	"MzE2MzM5N0AzMjM1MmUzMDJlMzBlSmJ5NGtYQkxzWVlDSHMrZURybUFnTjluenUxdU5Jd215ZDFBeG5OUTg4PQ==");
