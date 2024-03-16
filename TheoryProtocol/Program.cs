@@ -18,8 +18,9 @@ builder.Services.AddSyncfusionBlazor();
 SyncfusionLicenseProvider.RegisterLicense(
 	"MzE2MzM5N0AzMjM1MmUzMDJlMzBlSmJ5NGtYQkxzWVlDSHMrZURybUFnTjluenUxdU5Jd215ZDFBeG5OUTg4PQ==");
 
-string filePath = Directory.GetFiles("./Credentials")[0];
+string filePath = Directory.GetFiles("./Credentials").Where(x => x.EndsWith("json")).FirstOrDefault();
 Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", filePath);
+
 string projectId = "theorycontrol-8248e";
 FirestoreDb db = FirestoreDb.Create(projectId);
 
@@ -42,6 +43,7 @@ builder.Services.AddScoped<IFirestoreRepository<Vote>>(sp => voteReposisory);
 // Services
 builder.Services.AddScoped<UserService>(sp => new UserService(userRepository));
 builder.Services.AddScoped<FirestoreService>();
+builder.Services.AddSingleton<OpenAiService>();
 
 var app = builder.Build();
 

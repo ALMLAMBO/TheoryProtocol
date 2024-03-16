@@ -1,7 +1,13 @@
-﻿<MudText Align="Align.Center" Typo="Typo.h1">Summary</MudText>
-
+﻿@using ChatGPT.Net
+@inject OpenAiService openAiService;
+<MudText Align="Align.Center" Typo="Typo.h1">Summary</MudText>
+<MudButton @onclick="Click">Click</MudButton>
 
 @code
 {
+    async Task Click()
+    {
+        
+    }
     
 }
