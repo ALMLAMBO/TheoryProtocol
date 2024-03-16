@@ -4,7 +4,7 @@ namespace TheoryProtocol.Repositories
 {
     public class CanvasRepository : FirestoreRepository<Canvas>
     {
-        public CanvasRepository(string projectId, string collectionName) : base(projectId, collectionName)
+        public CanvasRepository(string projectId) : base(projectId, "canvas")
         {
         }
     }

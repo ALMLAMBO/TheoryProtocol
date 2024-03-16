@@ -1,6 +1,5 @@
 ﻿using Google.Cloud.Firestore;
 using Newtonsoft.Json;
-using TheoryProtocol.Models;
 
 namespace TheoryProtocol.Repositories
 {
