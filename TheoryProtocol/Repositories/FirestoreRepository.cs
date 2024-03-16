@@ -34,33 +34,41 @@ namespace TheoryProtocol.Repositories
             return lstT;
         }
 
-        public async Task<T> GetByIdAsync(string id)
+        public async Task<List<T>> GetByFieldIdAsync(string field,int id)
         {
-            DocumentReference docRef = _firestoreDb.Collection(_collectionName).Document(id);
-            DocumentSnapshot snapshot = await docRef.GetSnapshotAsync();
-            if (snapshot.Exists)
+            Query query = _firestoreDb.Collection(_collectionName).WhereEqualTo(field, id);
+            QuerySnapshot snapshot = await query.GetSnapshotAsync();
+            List<T> lstT = new List<T>();
+
+            foreach (DocumentSnapshot documentSnapshot in snapshot.Documents)
             {
-                return snapshot.ConvertTo<T>();
+                if (documentSnapshot.Exists)
+                {
+                    Dictionary<string, object> t = documentSnapshot.ToDictionary();
+                    string json = JsonConvert.SerializeObject(t);
+                    T newT = JsonConvert.DeserializeObject<T>(json);
+                    lstT.Add(newT);
+                }
             }
-            return null;
+            return lstT;
         }
 
         public async Task AddAsync(T entity)
         {
-            CollectionReference collectionRef = _firestoreDb.Collection(_collectionName);
-            await collectionRef.AddAsync(entity);
+            //CollectionReference collectionRef = _firestoreDb.Collection(_collectionName);
+            //await collectionRef.AddAsync(entity);
         }
 
-        public async Task UpdateAsync(string id, T entity)
+        public async Task UpdateAsync(int id, T entity)
         {
-            DocumentReference docRef = _firestoreDb.Collection(_collectionName).Document(id);
-            await docRef.SetAsync(entity, SetOptions.MergeAll);
+            //DocumentReference docRef = _firestoreDb.Collection(_collectionName)
+            //await docRef.SetAsync(entity, SetOptions.MergeAll);
         }
 
-        public async Task DeleteAsync(string id)
+        public async Task DeleteAsync(int id)
         {
-            DocumentReference docRef = _firestoreDb.Collection(_collectionName).Document(id);
-            await docRef.DeleteAsync();
+            //DocumentReference docRef = _firestoreDb.Collection(_collectionName).Document(id);
+            //await docRef.DeleteAsync();
         }
     }
 }
