@@ -9,7 +9,13 @@
   
   <ItemGroup>
     <PackageReference Include="FirebaseAdmin" Version="2.4.0" />
+    <PackageReference Include="Google.Cloud.Firestore" Version="1.0.0-beta14" />
     <PackageReference Include="MudBlazor" Version="6.*" />
+  </ItemGroup>
+
+  
+  <ItemGroup>
+    <ProjectReference Include="..\TheoryProtocol.Models\TheoryProtocol.Models.csproj" />
   </ItemGroup>
   
 </Project>

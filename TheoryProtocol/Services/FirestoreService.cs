@@ -1,6 +1,8 @@
 ﻿using Google.Cloud.Firestore;
 using TheoryProtocol.Models;
 using Newtonsoft.Json;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 
 namespace TheoryProtocol.Services
 {
@@ -11,10 +13,15 @@ namespace TheoryProtocol.Services
 
         public FirestoreService()
         {
-            string filepath = "../../TheoryProtocol.API/Credentials/service-account-key.json";
-            Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", filepath);
-            projectId = "theorycontrol-8248e";
-            db = FirestoreDb.Create(projectId);
+            string pathToCredentialJson = "../../TheoryProtocol.API/Credentials/service-account-key.json";
+            //Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", filepath);
+            //projectId = "theorycontrol-8248e";
+            //db = FirestoreDb.Create(projectId);
+            FirebaseApp.Create(new AppOptions()
+            {
+                Credential = GoogleCredential.FromFile(pathToCredentialJson)
+            });
+            db= FirestoreDb.Create("theorycontrol-8248e");
         }
 
         public async Task<List<User>> GetAllUsers()
