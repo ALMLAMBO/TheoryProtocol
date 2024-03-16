@@ -46,7 +46,7 @@
                 <MudButton Style="margin-left: 10px" Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => CancelCreateConnections())">Cancel</MudButton>
             </MudPopover>
             
-            <MudButton Variant="Variant.Filled" Color="Color.Primary">Summary</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="ShowSummary">Summary</MudButton>
         </div>
     </MudNavMenu>
 </div>
@@ -73,6 +73,10 @@
 
     public string A { get; set; }
     public string B { get; set; }
+    
+    //two-way data-binding
+    [Parameter] public bool ShowCanvas { get; set; }
+    [Parameter] public EventCallback<bool> ShowCanvasChanged { get; set; }
 
     //Creates nodes with some default values.
     private void OnNodeCreating(IDiagramObject obj)
@@ -654,5 +658,11 @@
     {
         // Todo: add service call
         connectionsCount = 1;
+    }
+
+    private async Task ShowSummary()
+    {
+        ShowCanvas = !ShowCanvas;
+        await ShowCanvasChanged.InvokeAsync(ShowCanvas);
     }
 }

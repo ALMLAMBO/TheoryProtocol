@@ -1,7 +1,24 @@
-﻿<MudText Align="Align.Center" Typo="Typo.h1">Summary</MudText>
+﻿@using TheoryProtocol.Components.Layout
+<MudText Align="Align.Center" Typo="Typo.h1">Summary</MudText>
 
+@if (showCanvas)
+{
+    <Canvas @bind-ShowCanvas="showCanvas"></Canvas>
+}
+
+<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="ShowCanvas">Show Canvas</MudButton>
 
 @code
 {
+    [Parameter] public int Id { get; set; }
+    public bool showCanvas = false;
     
+    [CascadingParameter]
+    public MainLayout MainLayout { get; set; }
+
+
+    public void ShowCanvas()
+    {
+        showCanvas = !showCanvas;
+    }
 }
