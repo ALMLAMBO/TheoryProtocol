@@ -1,0 +1,46 @@
+﻿@using TheoryProtocol.Components.Layout
+<MudAppBar Elevation="0">
+    <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())"/>
+    <MudSpacer/>
+    <MudIconButton Icon="@Icons.Custom.Brands.MudBlazor" Color="Color.Inherit" Link="https://mudblazor.com/" Target="_blank"/>
+    <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Link="https://github.com/MudBlazor/MudBlazor/" Target="_blank"/>
+</MudAppBar>
+<MudDrawer @bind-Open="DrawerOpen" Elevation="1">
+    <MudDrawerHeader>
+        <MudPaper Class="d-flex flex-column align-content-center flex-wrap flex-grow-1 gap-4" Elevation="0">
+            <MudText Typo="Typo.h6">MudBlazorTemplates1</MudText>
+            
+            @*temp for now*@
+            @for (int i = 0; i < 5; i++)
+            {
+                
+                var num = i+1;
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@(()=>SummaryShow(num))">Story 1</MudButton>
+                //when we have the models just use Model.Id for the SummaryShow parameter
+            }
+        </MudPaper>
+    </MudDrawerHeader>
+    <NavMenu/>
+</MudDrawer>
+
+@code {
+    [Parameter] public bool DrawerOpen { get; set; } = true;
+    [Parameter] public EventCallback<bool> DrawerOpenChanged { get; set; }
+    
+    [CascadingParameter]
+    public MainLayout MainLayout { get; set; }
+
+    public async Task DrawerToggle()
+    {
+        DrawerOpen = !DrawerOpen;
+        await DrawerOpenChanged.InvokeAsync(DrawerOpen);
+    }
+
+    private async Task SummaryShow(int id)
+    {
+        MainLayout.home.SummaryIsShown = true;
+        MainLayout.home.SummaryId = id;
+        await MainLayout.home.SummaryIsShownChanged.InvokeAsync(MainLayout.home.SummaryIsShown);
+    }
+
+}

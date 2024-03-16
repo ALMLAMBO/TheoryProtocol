@@ -1,16 +1,31 @@
 ﻿@page "/"
-<MudText Align="Align.Center" Typo="Typo.h1">Summary</MudText>
-<MudPaper Class="d-flex justify-center align-start flex-grow-1 gap-4" Elevation="0">
-    <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="width: 300px" @onclick="Click">Open to see the latest stories!</MudButton>
-</MudPaper>
+@using TheoryProtocol.Components.Layout
+
+@if (!SummaryIsShown)
+{
+    <MudText Align="Align.Center" Typo="Typo.h1">Index</MudText>
+    <MudPaper Class="d-flex justify-center align-start flex-grow-1 gap-4" Elevation="0">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="width: 300px" @onclick="Click">Open to see the latest stories!</MudButton>
+    </MudPaper>
+}
+else
+{
+    
+    <Summary></Summary>
+    <h1>@SummaryId</h1>
+}
 
 @code
 {
-    [CascadingParameter] protected EventCallback<bool> DrawerOpenedEvent { get; set; }
-    bool _drawerIsOpen = true;
-    public void Click()
+    [CascadingParameter]
+    public MainLayout MainLayout { get; set; }
+    [Parameter] public bool SummaryIsShown { get; set; } = true;
+    [Parameter] public EventCallback<bool> SummaryIsShownChanged { get; set; }
+    public int SummaryId { get; set; }
+    
+    async Task Click()
     {
-        _drawerIsOpen = !_drawerIsOpen;
-        DrawerOpenedEvent.InvokeAsync(_drawerIsOpen);
+        await MainLayout.drawerComponent.DrawerToggle();
+        
     }
 }
