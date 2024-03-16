@@ -7,7 +7,7 @@
     <MudLayout>
         <DrawerComponent @bind-DrawerOpen="drawerOpen" @ref="drawerComponent"></DrawerComponent>
         <MudMainContent>
-            <MudContainer MaxWidth="MaxWidth.Large" Class="my-16 pt-16">
+            <MudContainer Fixed="true" Style="margin: 10px">
                 <Home @bind-SummaryIsShown="summaryIsShown" @ref="home"></Home>
             </MudContainer>
         </MudMainContent>
