@@ -1,4 +1,5 @@
 ﻿@page "/"
+@inject FirestoreService fs
 
 <PageTitle>Home</PageTitle>
 
@@ -52,3 +53,9 @@
     </MudLink>
 </MudText>
 
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await fs.GetAllUsers();
+    }
+}

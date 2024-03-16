@@ -1,5 +1,6 @@
 using MudBlazor.Services;
 using TheoryProtocol.Components;
+using TheoryProtocol.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,7 @@ builder.Services.AddRazorComponents()
 	.AddInteractiveServerComponents();
 
 builder.Services.AddMudServices();
+builder.Services.AddSingleton<FirestoreService>();
 
 var app = builder.Build();
 

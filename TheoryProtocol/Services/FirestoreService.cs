@@ -13,15 +13,17 @@ namespace TheoryProtocol.Services
 
         public FirestoreService()
         {
-            string pathToCredentialJson = "../../TheoryProtocol.API/Credentials/service-account-key.json";
-            //Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", filepath);
-            //projectId = "theorycontrol-8248e";
-            //db = FirestoreDb.Create(projectId);
-            FirebaseApp.Create(new AppOptions()
-            {
-                Credential = GoogleCredential.FromFile(pathToCredentialJson)
-            });
-            db = FirestoreDb.Create("theorycontrol-8248e");
+            //string pathToCredentialJson = "./Credentials/service-account-key.json";
+            string filePath = Directory.GetFiles("./Credentials")[0];
+            Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", filePath);
+            projectId = "theorycontrol-8248e";
+            db = FirestoreDb.Create(projectId);
+            //FirebaseApp.Create(new AppOptions()
+            //{
+            //    Credential = GoogleCredential.FromFile(pathToCredentialJson)
+            //});
+            //db = FirestoreDb.Create("theorycontrol-8248e");
+            //Console.WriteLine("Created Cloud Firestore client with project ID: {0}", db);
         }
 
         public async Task<List<User>> GetAllUsers()
@@ -44,6 +46,7 @@ namespace TheoryProtocol.Services
                 }
 
                 List<User> sortedUserList = lstUser.OrderBy(x => x.Username).ToList();
+                //Console.WriteLine(sortedUserList);
                 return sortedUserList;
             }
             catch
