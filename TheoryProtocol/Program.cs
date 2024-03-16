@@ -1,4 +1,5 @@
 using MudBlazor.Services;
+using Syncfusion.Blazor;
 using TheoryProtocol.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,7 +9,7 @@ builder.Services.AddRazorComponents()
 	.AddInteractiveServerComponents();
 
 builder.Services.AddMudServices();
-
+builder.Services.AddSyncfusionBlazor();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
