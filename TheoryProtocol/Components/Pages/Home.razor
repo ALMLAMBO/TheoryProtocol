@@ -7,26 +7,29 @@
 
 @if (!SummaryIsShown)
 {
-    <MudText Align="Align.Center" Typo="Typo.h1">Index</MudText>
+
+    <MudText Align="Align.Center" Typo="Typo.h2" Style="font-family: Impact">Welcome to The Rabbit Hole!</MudText>
+    <MudText Align="Align.Center" Typo="Typo.h4">See different stories or participate in their creation</MudText>
+
     <MudPaper Class="d-flex justify-center align-start flex-grow-1 gap-4" Elevation="0">
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="width: 300px" @onclick="Click">Open to see the latest stories!</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="width: 300px; margin-top:5%;" @onclick="Click">Become a member of the madness</MudButton>
     </MudPaper>
+
 }
 else
 {
-    
+
     <Summary></Summary>
     <h1>@SummaryId</h1>
 }
 <!--<ul>
-        @foreach (var item in users)
-        {
+@foreach (var item in users)
+{
             <li>
                 <br/> <b>@item.Username</b>
             </li>
-        }
+}
  </ul>-->
-
 @code
 {
     [CascadingParameter]
@@ -35,12 +38,12 @@ else
     [Parameter] public EventCallback<bool> SummaryIsShownChanged { get; set; }
     public int SummaryId { get; set; }
     private List<User> users = new List<User>();
-    
+
     async Task Click()
     {
         await MainLayout.drawerComponent.DrawerToggle();
     }
-    
+
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
