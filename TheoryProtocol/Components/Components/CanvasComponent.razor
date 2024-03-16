@@ -1,0 +1,18 @@
+<MudNavMenu>
+   <MudIconButton Icon="@Icons.Material.Filled.PlusOne">Create fact</MudIconButton>
+   <MudIconButton Icon="@Icons.Material.Filled.PlusOne">Create connection</MudIconButton>
+   <MudIconButton Icon="@Icons.Material.Filled.LibraryBooks">Summary</MudIconButton>
+</MudNavMenu>
+
+@* TODO: add canvas *@
+
+<MudPopover Open="isCreateFactOpen">
+    <MudText></MudText>
+</MudPopover>
+
+@code {
+    private bool showSummary = false;
+    private bool isCreateFactOpen = false;
+    private bool isCreateConnectionOpen = false;
+    
+}

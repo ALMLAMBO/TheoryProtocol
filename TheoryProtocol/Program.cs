@@ -1,4 +1,6 @@
 using MudBlazor.Services;
+using Syncfusion.Blazor;
+using Syncfusion.Licensing;
 using TheoryProtocol.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +10,9 @@ builder.Services.AddRazorComponents()
 	.AddInteractiveServerComponents();
 
 builder.Services.AddMudServices();
+builder.Services.AddSyncfusionBlazor();
+SyncfusionLicenseProvider.RegisterLicense(
+	"MzE2MzIxMUAzMjM1MmUzMDJlMzBvZlVzeE5GK25EZHVRcW5VdXJOM3dKR3pGdXU3T3UwYTc3SUR4bDVjNGhRPQ==");
 
 var app = builder.Build();
 
