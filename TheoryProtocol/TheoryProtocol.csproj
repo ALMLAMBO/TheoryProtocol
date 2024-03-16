@@ -10,5 +10,13 @@
   <ItemGroup>
     <PackageReference Include="MudBlazor" Version="6.*" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Google.Cloud.Firestore" Version="1.0.0-beta14" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TheoryProtocol.Models\TheoryProtocol.Models.csproj" />
+  </ItemGroup>
   
 </Project>

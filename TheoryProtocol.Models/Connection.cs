@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace TheoryProtocol.Models
 {
     [FirestoreData]
-    public class Connetion
+    public class Connection
     {
         [FirestoreProperty] public int Id { get; set; }
         [FirestoreProperty] public int StartPointId { get; set; }
