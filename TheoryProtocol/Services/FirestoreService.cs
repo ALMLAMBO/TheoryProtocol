@@ -36,7 +36,7 @@ namespace TheoryProtocol.Services
                     }
                 }
 
-                List<User> sortedUserList = lstUser.OrderBy(x => x.Name).ToList();
+                List<User> sortedUserList = lstUser.OrderBy(x => x.Username).ToList();
                 return sortedUserList;
             }
             catch
@@ -86,13 +86,13 @@ namespace TheoryProtocol.Services
             }
         }
 
-        public async Task<List<Connection>> GetAllCommentsOfCanvas(Canvas canvas)
+        public async Task<List<Comment>> GetAllCommentsOfCanvas(Canvas canvas)
         {
             try
             {
                 Query commentQuery = db.Collection("comments").WhereEqualTo("id", canvas.Id);
                 QuerySnapshot commentQuerySnapshot = await commentQuery.GetSnapshotAsync();
-                List<Connection> lstComment = new List<Connection>();
+                List<Comment> lstComment = new List<Comment>();
 
                 foreach (DocumentSnapshot documentSnapshot in commentQuerySnapshot.Documents)
                 {
@@ -100,12 +100,12 @@ namespace TheoryProtocol.Services
                     {
                         Dictionary<string, object> comment = documentSnapshot.ToDictionary();
                         string json = JsonConvert.SerializeObject(comment);
-                        Connection newComment = JsonConvert.DeserializeObject<Connection>(json);
+                        Comment newComment = JsonConvert.DeserializeObject<Comment>(json);
                         lstComment.Add(newComment);
                     }
                 }
 
-                List<Connection> sortedCommentList = lstComment.OrderByDescending(x => x.Created).ToList();
+                List<Comment> sortedCommentList = lstComment.OrderByDescending(x => x.Created).ToList();
                 return sortedCommentList;
             }
             catch
