@@ -8,10 +8,10 @@ namespace TheoryProtocol.Models {
         public string Id { get; set; }
 
         [FirestoreProperty]
-        public string Name { get; set; }
+        public string Username { get; set; }
 
         [FirestoreProperty]
-        public string Pass { get; set; }
+        public string Password { get; set; }
 
         [FirestoreProperty]
         public string Email { get; set; }
