@@ -1,4 +1,7 @@
 ﻿@using TheoryProtocol.Components.Layout
+@using TheoryProtocol.Models
+@inject CanvasService cs
+
 <MudAppBar Elevation="0">
     <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())"/>
     <MudSpacer/>
@@ -11,11 +14,10 @@
             <MudText Typo="Typo.h6">MudBlazorTemplates1</MudText>
             
             @*temp for now*@
-            @for (int i = 0; i < 5; i++)
+            @foreach (var item in Canvases)
             {
                 
-                var num = i+1;
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@(()=>SummaryShow(num))">Story 1</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@(()=>SummaryShow(item.Id))">@item.Name</MudButton>
                 //when we have the models just use Model.Id for the SummaryShow parameter
             }
         </MudPaper>
@@ -26,14 +28,22 @@
 @code {
     [Parameter] public bool DrawerOpen { get; set; } = true;
     [Parameter] public EventCallback<bool> DrawerOpenChanged { get; set; }
-    
     [CascadingParameter]
     public MainLayout MainLayout { get; set; }
+
+    private List<Models.Canvas> Canvases = new List<Models.Canvas>();
+
 
     public async Task DrawerToggle()
     {
         DrawerOpen = !DrawerOpen;
         await DrawerOpenChanged.InvokeAsync(DrawerOpen);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        Canvases = await cs.GetCanvas();
     }
 
     private async Task SummaryShow(int id)
