@@ -46,7 +46,7 @@ namespace TheoryProtocol.Services
                 }
 
                 List<User> sortedUserList = lstUser.OrderBy(x => x.Username).ToList();
-                //Console.WriteLine(sortedUserList);
+                //Console.WriteLine(sortedUserList[0].Username);
                 return sortedUserList;
             }
             catch
@@ -72,7 +72,7 @@ namespace TheoryProtocol.Services
         {
             try
             {
-                Query canvasQuery = db.Collection("canvases");
+                Query canvasQuery = db.Collection("canvas");
                 QuerySnapshot canvasQuerySnapshot = await canvasQuery.GetSnapshotAsync();
                 List<Canvas> lstCanvas = new List<Canvas>();
 
