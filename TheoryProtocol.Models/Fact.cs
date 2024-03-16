@@ -14,6 +14,7 @@ namespace TheoryProtocol.Models
         [FirestoreProperty] public int Id { get; set; }
         [FirestoreProperty] public string Title { get; set; }
         [FirestoreProperty] public string Description { get; set; }
+        [FirestoreProperty] public string CanvasId { get; set; }
 
     }
 }

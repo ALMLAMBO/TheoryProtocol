@@ -7,7 +7,7 @@ namespace TheoryProtocol.Models
     {
         [FirestoreProperty] public int Id { get; set; }
         [FirestoreProperty] public int UserId { get; set; }
-        [FirestoreProperty] public int ConnetionId { get; set; }
+        [FirestoreProperty] public int ConnectionId { get; set; }
         [FirestoreProperty] public string? Content { get; set; }
         [FirestoreProperty] public DateTime? Created { get; set; }
     }

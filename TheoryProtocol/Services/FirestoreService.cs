@@ -8,7 +8,7 @@ namespace TheoryProtocol.Services
 {
     public class FirestoreService
     {
-        string projectId;
+        string? projectId;
         FirestoreDb db;
 
         public FirestoreService()
@@ -21,7 +21,7 @@ namespace TheoryProtocol.Services
             {
                 Credential = GoogleCredential.FromFile(pathToCredentialJson)
             });
-            db= FirestoreDb.Create("theorycontrol-8248e");
+            db = FirestoreDb.Create("theorycontrol-8248e");
         }
 
         public async Task<List<User>> GetAllUsers()

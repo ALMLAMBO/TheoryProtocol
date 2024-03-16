@@ -18,7 +18,7 @@ namespace TheoryProtocol.Models
         [FirestoreProperty] public int Id { get; set; }
         [FirestoreProperty] public int OwnerId { get; set; }
         [FirestoreProperty] public string Name { get; set; }
-        [FirestoreProperty] public DateTime EndDate { get; set; }
+        //[FirestoreProperty] public DateTime EndDate { get; set; }
         //[FirestoreProperty] public Tag Tags { get; set; }
     }
 }

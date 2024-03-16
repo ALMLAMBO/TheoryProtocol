@@ -11,8 +11,8 @@ namespace TheoryProtocol.Models
     public class Vote
     {
         [FirestoreProperty] public int Id { get; set; }
-        [FirestoreProperty] public int Signedge { get; set; }
+        [FirestoreProperty] public bool? Upvote { get; set; }
         [FirestoreProperty] public int UserId { get; set; }
-        [FirestoreProperty] public int ConnetionId { get; set; }
+        [FirestoreProperty] public int ConnectionId { get; set; }
     }
 }

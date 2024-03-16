@@ -13,6 +13,5 @@ namespace TheoryProtocol.Models
         [FirestoreProperty] public int Id { get; set; }
         [FirestoreProperty] public int StartPointId { get; set; }
         [FirestoreProperty] public int EndPointId { get; set; }
-        [FirestoreProperty] public int VoteId { get; set; }
     }
 }
