@@ -5,14 +5,17 @@
 <MudAppBar Elevation="0">
     <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())"/>
     <MudSpacer/>
-    <MudIconButton Icon="@Icons.Custom.Brands.MudBlazor" Color="Color.Inherit" Link="https://mudblazor.com/" Target="_blank"/>
-    <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Link="https://github.com/MudBlazor/MudBlazor/" Target="_blank"/>
+    <!--<MudIconButton Icon="@Icons.Custom.Brands.MudBlazor" Color="Color.Inherit" Link="https://mudblazor.com/" Target="_blank"/>-->
+    <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Link="https://github.com/ALMLAMBO/TheoryProtocol" Target="_blank" />
 </MudAppBar>
 <MudDrawer @bind-Open="DrawerOpen" Elevation="1">
     <MudDrawerHeader>
         <MudPaper Class="d-flex flex-column align-content-center flex-wrap flex-grow-1 gap-4" Elevation="0">
-            <MudText Typo="Typo.h6">MudBlazorTemplates1</MudText>
+            <div class="d-flex justify-center">
+            <MudImage ObjectPosition="ObjectPosition.Center" Style="width:50%; height:auto; text-align:center;" Src="img/bunny.png" />
             
+            <MudText Typo="Typo.h5">The Rabbit Hole</MudText>
+            </div>
             @*temp for now*@
             @foreach (var item in Canvases)
             {

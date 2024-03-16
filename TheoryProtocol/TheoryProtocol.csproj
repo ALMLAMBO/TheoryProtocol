@@ -6,6 +6,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Components\NewFolder\**" />
+    <Content Remove="Components\NewFolder\**" />
+    <EmbeddedResource Remove="Components\NewFolder\**" />
+    <None Remove="Components\NewFolder\**" />
+  </ItemGroup>
+
   
   <ItemGroup>
     <PackageReference Include="FirebaseAdmin" Version="2.4.0" />
@@ -22,6 +29,11 @@
   
   <ItemGroup>
     <Folder Include="Credentials\" />
+  </ItemGroup>
+
+  
+  <ItemGroup>
+    <None Include="wwwroot\img\bunny.png" />
   </ItemGroup>
   
 </Project>
