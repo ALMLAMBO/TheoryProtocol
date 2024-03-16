@@ -9,6 +9,7 @@
   
   <ItemGroup>
     <PackageReference Include="MudBlazor" Version="6.*" />
+    <PackageReference Include="Syncfusion.Blazor" Version="25.1.35" />
   </ItemGroup>
   
 </Project>
