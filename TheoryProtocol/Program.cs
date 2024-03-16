@@ -1,5 +1,6 @@
 using MudBlazor.Services;
 using Syncfusion.Blazor;
+using Syncfusion.Licensing;
 using TheoryProtocol.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,8 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddMudServices();
 builder.Services.AddSyncfusionBlazor();
+SyncfusionLicenseProvider.RegisterLicense(
+	"MzE2MzM5N0AzMjM1MmUzMDJlMzBlSmJ5NGtYQkxzWVlDSHMrZURybUFnTjluenUxdU5Jd215ZDFBeG5OUTg4PQ==");
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
