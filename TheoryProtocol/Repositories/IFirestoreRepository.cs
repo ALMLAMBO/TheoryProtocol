@@ -7,5 +7,7 @@
         Task AddAsync(T entity);
         Task UpdateAsync(int id, T entity);
         Task DeleteAsync(int id);
+        Task UpdateIdAsync(string collectionName);
+        Task<int> GetIdAsync(string collectionName);
     }
 }
