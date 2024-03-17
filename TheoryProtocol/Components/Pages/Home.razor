@@ -18,6 +18,7 @@ else
     <Summary></Summary>
     <h1>@SummaryId</h1>
 }
+<Canvas/>
 <ul>
         @foreach (var item in users)
         {
@@ -35,7 +36,7 @@ else
     [Parameter] public EventCallback<bool> SummaryIsShownChanged { get; set; }
     public int SummaryId { get; set; }
     private List<User> users = new List<User>();
-    
+
     async Task Click()
     {
         await MainLayout.drawerComponent.DrawerToggle();
@@ -46,4 +47,5 @@ else
         await base.OnInitializedAsync();
         users = await us.GetUsers();
     }
+
 }
