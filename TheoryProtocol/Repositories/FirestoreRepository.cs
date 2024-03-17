@@ -66,12 +66,12 @@ namespace TheoryProtocol.Repositories
             return lstT;
         }
 
-        public async Task AddAsync(T entity)
+        public async Task<DocumentReference> AddAsync(T entity)
         {
             try
             {
                 CollectionReference collectionRef = _firestoreDb.Collection(_collectionName);
-                await collectionRef.AddAsync(entity);
+                return await collectionRef.AddAsync(entity);
             }
             catch
             {

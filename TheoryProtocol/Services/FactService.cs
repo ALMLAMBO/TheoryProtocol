@@ -1,4 +1,5 @@
-﻿using TheoryProtocol.Models;
+﻿using Google.Cloud.Firestore;
+using TheoryProtocol.Models;
 using TheoryProtocol.Repositories;
 
 namespace TheoryProtocol.Services
@@ -17,12 +18,12 @@ namespace TheoryProtocol.Services
             return await _repository.GetByFieldIdAsync("CanvasId",canvasId);
         }
 
-        public async void AddFact(Fact fact)
+        public async Task<DocumentReference> AddFact(Fact fact)
         {
             int prevId = await _repository.GetIdAsync(_idDocumentName);
             fact.Id = prevId + 1;
             await _repository.UpdateIdAsync(_idDocumentName);
-            await _repository.AddAsync(fact);
+            return await _repository.AddAsync(fact);
         }
     }
 }

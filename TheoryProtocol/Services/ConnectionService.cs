@@ -17,9 +17,9 @@ namespace TheoryProtocol.Services
             return await _repository.GetByFieldIdAsync("CanvasId",canvasId);
         }
 
-        public void AddConnection(Fact from, Fact to)
+        public async Task<DocumentReference> AddConnection(Fact from, Fact to)
         {
-            _repository.AddConnection(from, to);
+            return await _repository.AddConnection(from, to);
         }
     }
 }

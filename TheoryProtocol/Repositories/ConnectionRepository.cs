@@ -10,7 +10,7 @@ namespace TheoryProtocol.Repositories
         {
         }
 
-        public async void AddConnection(Fact from, Fact to)
+        public async Task<DocumentReference> AddConnection(Fact from, Fact to)
         {
             int prevId = await GetIdAsync(_idDocumentName);
             Connection conn = new Connection
@@ -21,7 +21,7 @@ namespace TheoryProtocol.Repositories
                 Id = prevId + 1
             };
             await UpdateIdAsync(_idDocumentName);
-            await AddAsync(conn);
+            return await AddAsync(conn);
         }
     }
 }
