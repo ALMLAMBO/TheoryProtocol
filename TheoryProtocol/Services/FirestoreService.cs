@@ -1,6 +1,7 @@
 ﻿using Google.Cloud.Firestore;
 using TheoryProtocol.Models;
 using Newtonsoft.Json;
+using TheoryProtocol.Repositories;
 
 namespace TheoryProtocol.Services
 {
@@ -8,12 +9,15 @@ namespace TheoryProtocol.Services
     {
         string? projectId;
         FirestoreDb db;
+        private string _idDocumentName = "usersId";
+        private FirestoreRepository<User> _repository;
 
         public FirestoreService()
         {
             string filePath = Directory.GetFiles("./Credentials")[0];
             Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", filePath);
             projectId = "theorycontrol-8248e";
+            _repository = new FirestoreRepository<User>(projectId, "users");
             db = FirestoreDb.Create(projectId);
         }
 
@@ -50,6 +54,9 @@ namespace TheoryProtocol.Services
         {
             try
             {
+                int prevId = await _repository.GetIdAsync(_idDocumentName);
+                user.Id = prevId + 1;
+                await _repository.UpdateIdAsync(_idDocumentName);
                 CollectionReference colRef = db.Collection("users");
                 await colRef.AddAsync(user);
             }

@@ -6,9 +6,11 @@ namespace TheoryProtocol.Services
     public class CanvasService
     {
         private readonly CanvasRepository _repository;
+        private string _idDocumentName;
         public CanvasService(CanvasRepository repository)
         {
             _repository = repository;
+            _idDocumentName = "canvasId";
         }
 
         public async Task<List<Models.Canvas>> GetCanvas()
@@ -18,7 +20,9 @@ namespace TheoryProtocol.Services
 
         public async Task AddCanvas(Canvas canvas)
         {
+            int prevId = await _repository.GetIdAsync(_idDocumentName);
             await _repository.AddAsync(canvas);
+            await _repository.UpdateIdAsync(_idDocumentName);
         }
 
     }
