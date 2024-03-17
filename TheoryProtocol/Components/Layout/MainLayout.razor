@@ -8,7 +8,7 @@
         <DrawerComponent @bind-DrawerOpen="drawerOpen" @ref="drawerComponent"></DrawerComponent>
         <MudMainContent>
             <MudContainer Fixed="true" Style="margin: 10px">
-                <Home @bind-SummaryIsShown="summaryIsShown" @ref="home"></Home>
+                <Home @bind-SummaryIsShown="summaryIsShown" @ref="Home"></Home>
             </MudContainer>
         </MudMainContent>
     </MudLayout>
@@ -16,7 +16,7 @@
 
 @code {
     public DrawerComponent drawerComponent;
-    public Home home;
+    public Home Home;
     public bool drawerOpen = true;
     public bool summaryIsShown = false;
 }

@@ -43,7 +43,7 @@
                 <MudButton Style="margin-left: 10px" Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => CancelCreateConnections())">Cancel</MudButton>
             </MudPopover>
             
-            <MudButton Variant="Variant.Filled" Color="Color.Primary">Summary</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="ShowSummary">Summary</MudButton>
         </div>
     </MudNavMenu>
 </div>
@@ -221,5 +221,11 @@
         {
             isCreateConnectionBtnDisabled = true;
         }
+    }
+
+    private async Task ShowSummary()
+    {
+        ShowCanvas = !ShowCanvas;
+        await ShowCanvasChanged.InvokeAsync(ShowCanvas);
     }
 }

@@ -14,8 +14,7 @@
 }
 else
 {
-    
-    <Summary></Summary>
+    <Summary Id="SummaryId" @ref="Summary"></Summary>
     <h1>@SummaryId</h1>
 }
 <Canvas/>
@@ -32,11 +31,12 @@ else
 {
     [CascadingParameter]
     public MainLayout MainLayout { get; set; }
-    [Parameter] public bool SummaryIsShown { get; set; } = true;
+    [Parameter] public bool SummaryIsShown { get; set; } = false;
     [Parameter] public EventCallback<bool> SummaryIsShownChanged { get; set; }
     public int SummaryId { get; set; }
     private List<User> users = new List<User>();
-
+    public Summary Summary = new Summary();
+    
     async Task Click()
     {
         await MainLayout.drawerComponent.DrawerToggle();

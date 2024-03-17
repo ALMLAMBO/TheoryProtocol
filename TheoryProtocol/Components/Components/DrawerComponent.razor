@@ -38,9 +38,14 @@
 
     private async Task SummaryShow(int id)
     {
-        MainLayout.home.SummaryIsShown = true;
-        MainLayout.home.SummaryId = id;
-        await MainLayout.home.SummaryIsShownChanged.InvokeAsync(MainLayout.home.SummaryIsShown);
+        if (MainLayout.Home.Summary.showCanvas)
+        {
+            MainLayout.Home.Summary.showCanvas = false;
+        }
+        MainLayout.Home.SummaryIsShown = true;
+        MainLayout.Home.SummaryId = id;
+        await MainLayout.Home.SummaryIsShownChanged.InvokeAsync(MainLayout.Home.SummaryIsShown);
     }
+    
 
 }
