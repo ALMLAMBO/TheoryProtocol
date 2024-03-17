@@ -1,10 +1,12 @@
 @using Google.Api
+@using TheoryProtocol.Models
 @inject IDialogService dialogService
+@inject CommentService commentService
 <h3>ConnectionComments</h3>
 
 
 <div style="width: 100%">
-    @foreach (ConnectionComment comment in _comments)
+    @foreach (Comment comment in comments)
     {
         <MudPaper Outlined="true" Elevation="3" Style="margin-bottom: 10px">
             <MudText>@string.Join(" ", comment.CreatedAt.ToLongDateString(), comment.CreatedAt.ToShortTimeString())</MudText>
@@ -27,19 +29,19 @@
     bool showVoteDialog = false;
     private string commentContent;
 
-    List<ConnectionComment> _comments = new List<ConnectionComment>()
+    List<Comment> comments = new List<Comment>()
     {
-        new ConnectionComment()
-        {
-            Content = "bla bla bla",
-            CreatedAt = new DateTime(2023, 11, 11, 11, 11, 11)
-        },
-        new ConnectionComment()
-        {
-            Content = "uga buga",
-            CreatedAt = new DateTime(2023, 12, 12, 12, 12, 12)
-        }
     };
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            return;
+        }
+        comments = await commentService.GetCommentsByCanvasAsync(0);
+        
+    }
 
     private void OpenVoteDialog()
     {
