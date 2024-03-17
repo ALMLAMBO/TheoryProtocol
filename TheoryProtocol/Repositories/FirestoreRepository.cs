@@ -7,6 +7,7 @@ namespace TheoryProtocol.Repositories
     {
         private readonly FirestoreDb _firestoreDb;
         private readonly string _collectionName;
+        private const string ID_COLLECTION_NAME = "ids";
 
         public FirestoreRepository(string projectId, string collectionName)
         {
@@ -76,6 +77,28 @@ namespace TheoryProtocol.Repositories
         {
             //DocumentReference docRef = _firestoreDb.Collection(_collectionName).Document(id);
             //await docRef.DeleteAsync();
+        }
+
+        public async Task UpdateIdAsync(string idDocumentName)
+        {
+            DocumentReference df = _firestoreDb
+                .Collection(ID_COLLECTION_NAME)
+                .Document(idDocumentName);
+
+            int prevId = await GetIdAsync(idDocumentName);
+            prevId++;
+            await df.UpdateAsync("Id", prevId);
+        }
+
+        public async Task<int> GetIdAsync(string idDocumentName)
+        {
+            DocumentSnapshot ds = await _firestoreDb
+                .Collection(ID_COLLECTION_NAME)
+                .Document(idDocumentName)
+                .GetSnapshotAsync();
+
+            Dictionary<string, object> dictionary = ds.ToDictionary();
+            return int.Parse(dictionary["Id"].ToString());
         }
     }
 }

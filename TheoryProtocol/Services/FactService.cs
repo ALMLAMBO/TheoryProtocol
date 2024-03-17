@@ -6,6 +6,7 @@ namespace TheoryProtocol.Services
     public class FactService
     {
         private readonly FactRepository _repository;
+        private string _idDocumentName = "factsId";
         public FactService(FactRepository repository)
         {
             _repository = repository;
@@ -18,6 +19,9 @@ namespace TheoryProtocol.Services
 
         public async void AddFact(Fact fact)
         {
+            int prevId = await _repository.GetIdAsync(_idDocumentName);
+            fact.Id = prevId + 1;
+            await _repository.UpdateIdAsync(_idDocumentName);
             await _repository.AddAsync(fact);
         }
     }

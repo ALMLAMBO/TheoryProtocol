@@ -43,7 +43,8 @@
                 <MudButton Style="margin-left: 10px" Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => CancelCreateConnections())">Cancel</MudButton>
             </MudPopover>
             
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="ShowSummary">Summary</MudButton>
+            <MudButton id="createSummaryBtn" Style="margin-right: 10px" Variant="Variant.Filled" Color="Color.Primary" @onclick="ShowSummary">Summary</MudButton>
+            <MudButton id="showCommentsBtn" Variant="Variant.Filled" Color="Color.Primary" @onclick="ShowComments" Disabled="@isShowCommentsBtnDisabled">Show Comments</MudButton>
         </div>
     </MudNavMenu>
 </div>
@@ -53,10 +54,13 @@
     <SnapSettings Constraints="@SnapConstraints.None"></SnapSettings>
 </SfDiagramComponent>
 
+<ConnectionComments />
+
 @code
 {
     bool isCreateDialogOpen = false;
     bool isCreateConnectionOpen = false;
+    bool isCommentsPanelHidden = true;
     string root;
     [Parameter] public bool ShowCanvas { get; set; } = false;
     [Parameter] public EventCallback<bool> ShowCanvasChanged { get; set; }
@@ -68,9 +72,11 @@
 
     // Connection details
     private bool isCreateConnectionBtnDisabled = true;
+    private bool isShowCommentsBtnDisabled = true;
     private int nodeConnectionCount = 1;
     private int connectionsCount = 1;
     private List<Node> selectedNodes = new List<Node>();
+    private List<Connector> selectedConnectors = new List<Connector>();
     private IEnumerable<string> selectedFromFactTitle;
     private IEnumerable<string> selectedToFactTitle;
 
@@ -81,33 +87,39 @@
     DiagramObjectCollection<Node> nodes = new DiagramObjectCollection<Node>();
     DiagramObjectCollection<Connector> connectors = new DiagramObjectCollection<Connector>();
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        facts = await factService.GetFactsByCanvasAsync(0);
-        connections = await connService.GetConnectionsByCanvasAsync(0);
-        for (int i = 0; i < facts.Count; i++)
+        if (firstRender)
         {
-            nodes.Add(new Node()
-                {
-                    ID = facts[i].Id.ToString(),
-                    Annotations = new DiagramObjectCollection<ShapeAnnotation>() {
-                        new ShapeAnnotation() { Content = facts[i].Title } 
-                    },
-                    OffsetY = 100*i
-                }
-            );
-        }
-        root = facts[0].Title;
+            facts = await factService.GetFactsByCanvasAsync(0);
+            connections = await connService.GetConnectionsByCanvasAsync(0);
+            for (int i = 0; i < facts.Count; i++)
+            {
+                nodes.Add(new Node()
+                    {
+                        ID = facts[i].Id.ToString(),
+                        Annotations = new DiagramObjectCollection<ShapeAnnotation>()
+                        {
+                            new ShapeAnnotation() { Content = facts[i].Title }
+                        },
+                        OffsetY = 100 * i
+                    }
+                );
+            }
 
-        for (int i = 0; i < connections.Count; i++)
-        {
-            connectors.Add(new Connector()
-                {
-                    ID = connections[i].Id.ToString() + "dash",
-                    SourceID = connections[i].StartPointId.ToString(),
-                    TargetID = connections[i].EndPointId.ToString()
-                }
-            );
+            root = facts[0].Title;
+
+            for (int i = 0; i < connections.Count; i++)
+            {
+                connectors.Add(new Connector()
+                    {
+                        ID = connections[i].Id.ToString() + "dash",
+                        SourceID = connections[i].StartPointId.ToString(),
+                        TargetID = connections[i].EndPointId.ToString(),
+                        Constraints = (ConnectorConstraints)0x2363E
+                    }
+                );
+            }
         }
     }
 
@@ -201,15 +213,15 @@
         connectionsCount = 1;
         Fact fromFact = facts.Where(x => x.Title == selectedFromFactTitle.First().ToString()).First();
         Fact toFact = facts.Where(x => x.Title == selectedToFactTitle.First().ToString()).First();
-        
+
         connService.AddConnection(fromFact, toFact);
     }
 
     public void OnSelectionChanged(SelectionChangedEventArgs args) {
         selectedNodes.Clear();
+        selectedConnectors.Clear();
         if(args.NewValue.Count > 0)
         {
-            isCreateConnectionBtnDisabled = false;
             foreach (var selected in args.NewValue)
             {
                 if (selected.GetType().Name == "Node")
@@ -217,11 +229,22 @@
                     Node selNode = (Node)selected;
                     selectedNodes.Add(selNode);
                 }
+                else
+                {
+                    selectedConnectors.Add((Connector)selected);
+                    isShowCommentsBtnDisabled = false;
+                }
+            }
+            if (selectedNodes.Count > 0)
+            {
+                isCreateConnectionBtnDisabled = false;
+                isShowCommentsBtnDisabled = true;
             }
         } 
         else
         {
             isCreateConnectionBtnDisabled = true;
+            isShowCommentsBtnDisabled = true;
         }
     }
 
@@ -229,5 +252,10 @@
     {
         ShowCanvas = !ShowCanvas;
         await ShowCanvasChanged.InvokeAsync(ShowCanvas);
+    }
+
+    private async Task ShowComments()
+    {
+        isCommentsPanelHidden = true;   
     }
 }
