@@ -12,9 +12,9 @@ namespace TheoryProtocol.Services
             _repository = repository;
         }
 
-        public async Task<List<Comment>> GetCommentsByCanvasAsync(int canvasId)
+        public async Task<List<Comment>> GetCommentsByConnectionAsync(int connectionId)
         {
-            return await _repository.GetByFieldIdAsync("CanvasId",canvasId);
+            return await _repository.GetByFieldIdAsync("ConnectionId",connectionId);
         }
 
         public async void AddComment(Comment comment)
