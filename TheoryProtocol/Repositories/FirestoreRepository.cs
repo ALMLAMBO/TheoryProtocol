@@ -85,9 +85,9 @@ namespace TheoryProtocol.Repositories
                 .Collection(ID_COLLECTION_NAME)
                 .Document(idDocumentName);
 
-            int prevId = await GetIdAsync(_collectionName);
+            int prevId = await GetIdAsync(idDocumentName);
             prevId++;
-            await df.UpdateAsync("id", prevId);
+            await df.UpdateAsync("Id", prevId);
         }
 
         public async Task<int> GetIdAsync(string idDocumentName)
@@ -97,7 +97,8 @@ namespace TheoryProtocol.Repositories
                 .Document(idDocumentName)
                 .GetSnapshotAsync();
 
-            return ds.GetValue<int>("id");
+            Dictionary<string, object> dictionary = ds.ToDictionary();
+            return int.Parse(dictionary["Id"].ToString());
         }
     }
 }
