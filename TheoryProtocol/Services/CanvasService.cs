@@ -16,5 +16,10 @@ namespace TheoryProtocol.Services
             return await _repository.GetAllAsync();
         }
 
+        public async Task AddCanvas(Canvas canvas)
+        {
+            await _repository.AddAsync(canvas);
+        }
+
     }
 }
