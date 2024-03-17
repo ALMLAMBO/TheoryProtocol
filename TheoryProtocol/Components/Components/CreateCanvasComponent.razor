@@ -1,6 +1,7 @@
 ﻿@using TheoryProtocol.Models
 @using TheoryProtocol.Components.Layout
 @inject CanvasService CanvasService
+@inject FactService FactService;
 <MudDialog>
     <DialogContent>
         <EditForm EditContext="_editContext" OnValidSubmit="SubmitForm">
@@ -22,6 +23,7 @@
     private CreateCanvasModel model = new CreateCanvasModel();
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
     [Parameter] public MainLayout MainLayout { get; set; }
+    [Parameter] public int CanvasId { get; set; }
     protected override Task OnInitializedAsync()
     {
         _editContext = new EditContext(model);
@@ -43,7 +45,9 @@
             /*MainLayout.drawerComponent.Canvases = await FirestoreService.GetAllCanvases();
             MainLayout.drawerComponent.Canvases.Add(new Models.Canvas() { Name = "Test" });*/
             Models.Canvas canvasModel = new Models.Canvas() { Name = model.Name, OwnerId = 0};
+            Fact newFact = new Fact() { CanvasId = CanvasId, Description = model.Description, Title = model.Title };
             //MainLayout.drawerComponent.Canvases.Add(canvasModel);
+            FactService.AddFact(newFact);
             await CanvasService.AddCanvas(canvasModel);
             await MainLayout.drawerComponent.Refresh();
             

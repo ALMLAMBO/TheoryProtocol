@@ -41,7 +41,6 @@ namespace TheoryProtocol.Services
                 }
 
                 List<User> sortedUserList = lstUser.OrderBy(x => x.Username).ToList();
-                Console.WriteLine(sortedUserList);
                 return sortedUserList;
             }
             catch

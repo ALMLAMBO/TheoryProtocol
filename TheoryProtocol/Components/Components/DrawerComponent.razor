@@ -60,6 +60,7 @@
     protected override async Task OnInitializedAsync()
     {
         Canvases = await cs.GetCanvas();
+        Canvases = Canvases.OrderBy(x => x.Id).ToList();
         await base.OnInitializedAsync();
     }
 
@@ -79,9 +80,11 @@
     private void OpenOverlay()
     {
         var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
+        int canvasId = Canvases.LastOrDefault().Id + 1;
         var parameters = new DialogParameters()
         {
-            { "MainLayout", MainLayout }
+            { "MainLayout", MainLayout },
+            {"CanvasId", canvasId}
         };
         DialogService.Show<CreateCanvasComponent>("Create Canvas", parameters, options);
     }
@@ -89,7 +92,12 @@
     public async Task Refresh()
     {
         Canvases = await cs.GetCanvas();
+        Canvases = Canvases.OrderBy(x=>x.Id).ToList();
         StateHasChanged();
+        foreach (var item in Canvases)
+        {
+            Console.WriteLine($"after addition: {item.Id}");
+        }
     }
 
 }
