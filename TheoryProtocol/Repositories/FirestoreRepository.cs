@@ -55,8 +55,15 @@ namespace TheoryProtocol.Repositories
 
         public async Task AddAsync(T entity)
         {
-            //CollectionReference collectionRef = _firestoreDb.Collection(_collectionName);
-            //await collectionRef.AddAsync(entity);
+            try
+            {
+                CollectionReference collectionRef = _firestoreDb.Collection(_collectionName);
+                await collectionRef.AddAsync(entity);
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         public async Task UpdateAsync(int id, T entity)

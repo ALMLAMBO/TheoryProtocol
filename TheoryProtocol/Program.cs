@@ -40,6 +40,8 @@ builder.Services.AddScoped<IFirestoreRepository<User>>(sp => userRepository);
 builder.Services.AddScoped<IFirestoreRepository<Vote>>(sp => voteReposisory);
 
 // Services
+builder.Services.AddScoped<ConnectionService>(sp => new ConnectionService(connectionRepository));
+builder.Services.AddScoped<FactService>(sp => new FactService(factRepository));
 builder.Services.AddScoped<UserService>(sp => new UserService(userRepository));
 builder.Services.AddScoped<CanvasService>(sp => new CanvasService(canvasRepository));
 builder.Services.AddScoped<FirestoreService>();

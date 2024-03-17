@@ -7,12 +7,9 @@
 
 @if (!SummaryIsShown)
 {
-
-    <MudText Align="Align.Center" Typo="Typo.h2" Style="font-family: Impact">Welcome to The Rabbit Hole!</MudText>
-    <MudText Align="Align.Center" Typo="Typo.h4">See different stories or participate in their creation</MudText>
-
-    <MudPaper Class="d-flex justify-center align-start flex-grow-1 gap-4" Elevation="0" style="background-color:#F4E5C0;">
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="width: 300px; margin-top:5%;" @onclick="Click">Become a member of the madness</MudButton>
+    <MudText Align="Align.Center" Typo="Typo.h1">Index</MudText>
+    <MudPaper Class="d-flex justify-center align-start flex-grow-1 gap-4" Elevation="0">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="width: 300px" @onclick="Click">Open to see the latest stories!</MudButton>
     </MudPaper>
 
 }
@@ -21,14 +18,15 @@ else
     <Summary Id="SummaryId" @ref="Summary"></Summary>
     <h1>@SummaryId</h1>
 }
-<!--<ul>
-@foreach (var item in users)
-{
+<ul>
+        @foreach (var item in users)
+        {
             <li>
                 <br/> <b>@item.Username</b>
             </li>
-}
- </ul>-->
+        }
+    </ul>
+
 @code
 {
     [CascadingParameter]
@@ -43,7 +41,7 @@ else
     {
         await MainLayout.drawerComponent.DrawerToggle();
     }
-
+    
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
