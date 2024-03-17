@@ -1,5 +1,6 @@
 @using TheoryProtocol.Components.Layout
 @using TheoryProtocol.Models
+@using System.Text
 @inject OpenAiService ai
 @inject FactService fs
 <MudText Align="Align.Center" Typo="Typo.h2" Style="font-family: Impact">@MainLayout.Title</MudText>
@@ -28,8 +29,12 @@
     protected override async Task OnInitializedAsync()
     {
         List<Fact> facts = await fs.GetFactsByCanvasAsync(Id);
-        string prompt = string.Join(" | ", facts);
-        summary=await ai.Prompt(prompt + "\n Summarize");
+        StringBuilder sb = new StringBuilder();
+        foreach (var fact in facts)
+        {
+            sb.Append(fact.Description);
+        }
+        summary=await ai.Prompt(sb.ToString() + "\n Summarize");
     }
     public void ShowCanvas()
     {
