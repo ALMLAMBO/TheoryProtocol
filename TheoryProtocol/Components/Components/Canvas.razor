@@ -89,36 +89,37 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (!firstRender)
+        if (firstRender)
         {
-            return;
-        }
-        facts = await factService.GetFactsByCanvasAsync(0);
-        connections = await connService.GetConnectionsByCanvasAsync(0);
-        for (int i = 0; i < facts.Count; i++)
-        {
-            nodes.Add(new Node()
-                {
-                    ID = facts[i].Id.ToString(),
-                    Annotations = new DiagramObjectCollection<ShapeAnnotation>() {
-                        new ShapeAnnotation() { Content = facts[i].Title } 
-                    },
-                    OffsetY = 100*i
-                }
-            );
-        }
-        root = facts[0].Title;
+            facts = await factService.GetFactsByCanvasAsync(0);
+            connections = await connService.GetConnectionsByCanvasAsync(0);
+            for (int i = 0; i < facts.Count; i++)
+            {
+                nodes.Add(new Node()
+                    {
+                        ID = facts[i].Id.ToString(),
+                        Annotations = new DiagramObjectCollection<ShapeAnnotation>()
+                        {
+                            new ShapeAnnotation() { Content = facts[i].Title }
+                        },
+                        OffsetY = 100 * i
+                    }
+                );
+            }
 
-        for (int i = 0; i < connections.Count; i++)
-        {
-            connectors.Add(new Connector()
-                {
-                    ID = connections[i].Id.ToString() + "dash",
-                    SourceID = connections[i].StartPointId.ToString(),
-                    TargetID = connections[i].EndPointId.ToString(),
-                    Constraints = (ConnectorConstraints)0x2363E
-                }
-            );
+            root = facts[0].Title;
+
+            for (int i = 0; i < connections.Count; i++)
+            {
+                connectors.Add(new Connector()
+                    {
+                        ID = connections[i].Id.ToString() + "dash",
+                        SourceID = connections[i].StartPointId.ToString(),
+                        TargetID = connections[i].EndPointId.ToString(),
+                        Constraints = (ConnectorConstraints)0x2363E
+                    }
+                );
+            }
         }
     }
 
