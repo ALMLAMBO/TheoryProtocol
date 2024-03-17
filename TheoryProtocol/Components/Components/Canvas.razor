@@ -51,10 +51,12 @@
     </MudNavMenu>
 </div>
 
+<!--<div @ondblclick="DoubleClick">-->
 <SfDiagramComponent Width="100%" Height="600px" @bind-Nodes="@nodes" @bind-Connectors="@connectors" NodeCreating="NodeCreating" ConnectorCreating="ConnectorCreating" ID="id" SelectionChanged="OnSelectionChanged">
     <Layout Type="LayoutType.RadialTree" HorizontalSpacing="30" VerticalSpacing="30" Root="@root"></Layout>
     <SnapSettings Constraints="@SnapConstraints.None"></SnapSettings>
 </SfDiagramComponent>
+<!--</div>-->
 
 <ConnectionComments/>
 
@@ -98,11 +100,11 @@
     DiagramObjectCollection<Node> nodes = new DiagramObjectCollection<Node>();
     DiagramObjectCollection<Connector> connectors = new DiagramObjectCollection<Connector>();
 
-   /* protected override Task OnInitializedAsync()
-     {
-         TitleChanged.InvokeAsync("")
-         return base.OnInitializedAsync();
-     }*/
+    /* protected override Task OnInitializedAsync()
+          {
+          TitleChanged.InvokeAsync("")
+          return base.OnInitializedAsync();
+      }*/
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -124,7 +126,7 @@
                     }
                 );
             }
-                
+
             root = facts[0].Title;
 
             for (int i = 0; i < connections.Count; i++)
@@ -301,5 +303,4 @@
 
         //dialogService.Show<VoteConnection>("Vote", options);
     }
-
 }

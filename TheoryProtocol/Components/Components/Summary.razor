@@ -1,4 +1,7 @@
 @using TheoryProtocol.Components.Layout
+@using TheoryProtocol.Models
+@inject OpenAiService ai
+@inject FactService fs
 <MudText Align="Align.Center" Typo="Typo.h2" Style="font-family: Impact">@MainLayout.Title</MudText>
 
 @if (showCanvas)
@@ -8,7 +11,7 @@
 }
 
    <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="ShowCanvas">@buttonText</MudButton>
-
+   <MudText>@summary</MudText>
 
 @code
 {
@@ -20,7 +23,14 @@
     public MainLayout MainLayout { get; set; }
 
     private string buttonText = "Show Board";
+    private string summary = "";
 
+    protected override async Task OnInitializedAsync()
+    {
+        List<Fact> facts = await fs.GetFactsByCanvasAsync(Id);
+        string prompt = string.Join(" | ", facts);
+        summary=await ai.Prompt(prompt + "\n Summarize");
+    }
     public void ShowCanvas()
     {
         showCanvas = !showCanvas;
