@@ -45,7 +45,7 @@
                 <MudButton Style="margin-left: 10px" Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => CancelCreateConnections())">Cancel</MudButton>
             </MudPopover>
 
-            <MudButton Style="margin-right: 10px" Variant="Variant.Filled" Color="Color.Primary" @onclick="ShowSummary">Summary</MudButton>
+            <!--<MudButton Style="margin-right: 10px" Variant="Variant.Filled" Color="Color.Primary" @onclick="ShowSummary">Summary</MudButton>-->
             <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="ShowComments" Disabled="@isShowCommentsBtnDisabled">Show Comments</MudButton>
         </div>
     </MudNavMenu>
@@ -56,9 +56,13 @@
     <Layout Type="LayoutType.RadialTree" HorizontalSpacing="30" VerticalSpacing="30"></Layout>
     <SnapSettings Constraints="@SnapConstraints.None"></SnapSettings>
 </SfDiagramComponent>
+<!--</div>-->
 
 @code
 {
+    [Parameter] public string Title {get; set;}
+    [Parameter] public EventCallback<string> TitleChanged {get; set;}
+
     SfDiagramComponent diagram;
     bool isCreateDialogOpen = false;
     bool isCreateConnectionOpen = false;
@@ -388,5 +392,4 @@
 
         //dialogService.Show<VoteConnection>("Vote", options);
     }
-
 }
