@@ -21,6 +21,8 @@ namespace TheoryProtocol.Services
         public async Task AddCanvas(Canvas canvas)
         {
             int prevId = await _repository.GetIdAsync(_idDocumentName);
+            Canvas newCanvas = canvas;
+            newCanvas.Id = prevId+1;
             await _repository.AddAsync(canvas);
             await _repository.UpdateIdAsync(_idDocumentName);
         }
