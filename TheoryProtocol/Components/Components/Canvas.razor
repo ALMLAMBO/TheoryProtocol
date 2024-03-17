@@ -45,7 +45,7 @@
                 <MudButton Style="margin-left: 10px" Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => CancelCreateConnections())">Cancel</MudButton>
             </MudPopover>
 
-            <MudButton Style="margin-right: 10px" Variant="Variant.Filled" Color="Color.Primary" @onclick="ShowSummary">Summary</MudButton>
+            <!--<MudButton Style="margin-right: 10px" Variant="Variant.Filled" Color="Color.Primary" @onclick="ShowSummary">Summary</MudButton>-->
             <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="ShowComments" Disabled="@isShowCommentsBtnDisabled">Show Comments</MudButton>
         </div>
     </MudNavMenu>
@@ -60,6 +60,9 @@
 
 @code
 {
+    [Parameter] public string Title {get; set;}
+    [Parameter] public EventCallback<string> TitleChanged {get; set;}
+
     SfDiagramComponent diagram;
     bool isCreateDialogOpen = false;
     bool isCreateConnectionOpen = false;
@@ -94,7 +97,12 @@
 
     DiagramObjectCollection<Node> nodes = new DiagramObjectCollection<Node>();
     DiagramObjectCollection<Connector> connectors = new DiagramObjectCollection<Connector>();
-    
+
+   /* protected override Task OnInitializedAsync()
+     {
+         TitleChanged.InvokeAsync("")
+         return base.OnInitializedAsync();
+     }*/
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
