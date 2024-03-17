@@ -58,6 +58,8 @@
     bool isCreateDialogOpen = false;
     bool isCreateConnectionOpen = false;
     string root;
+    [Parameter] public bool ShowCanvas { get; set; } = false;
+    [Parameter] public EventCallback<bool> ShowCanvasChanged { get; set; }
 
     // Fact details
     public int canvasId = 0;
