@@ -1,4 +1,5 @@
 ﻿@using TheoryProtocol.Components.Layout
+@inject IDialogService DialogService
 <MudAppBar Elevation="0">
     <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())"/>
     <MudSpacer/>
@@ -9,15 +10,16 @@
     <MudDrawerHeader>
         <MudPaper Class="d-flex flex-column align-content-center flex-wrap flex-grow-1 gap-4" Elevation="0">
             <MudText Typo="Typo.h6">MudBlazorTemplates1</MudText>
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Info" @onclick="OpenOverlay">Create</MudButton>
             
             @*temp for now*@
-            @for (int i = 0; i < 5; i++)
+            @*@for (int i = 0; i < 5; i++)
             {
                 
                 var num = i+1;
                 <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@(()=>SummaryShow(num))">Story 1</MudButton>
                 //when we have the models just use Model.Id for the SummaryShow parameter
-            }
+            }*@
         </MudPaper>
     </MudDrawerHeader>
     <NavMenu/>
@@ -26,6 +28,9 @@
 @code {
     [Parameter] public bool DrawerOpen { get; set; } = true;
     [Parameter] public EventCallback<bool> DrawerOpenChanged { get; set; }
+    //fill the list oninitialized
+    List<Canvas> _canvasList = new List<Canvas>();
+    
     
     [CascadingParameter]
     public MainLayout MainLayout { get; set; }
@@ -38,9 +43,20 @@
 
     private async Task SummaryShow(int id)
     {
-        MainLayout.home.SummaryIsShown = true;
-        MainLayout.home.SummaryId = id;
-        await MainLayout.home.SummaryIsShownChanged.InvokeAsync(MainLayout.home.SummaryIsShown);
+        if (MainLayout.Home.Summary.showCanvas)
+        {
+            MainLayout.Home.Summary.showCanvas = false;
+        }
+        MainLayout.Home.SummaryIsShown = true;
+        MainLayout.Home.SummaryId = id;
+        await MainLayout.Home.SummaryIsShownChanged.InvokeAsync(MainLayout.Home.SummaryIsShown);
+    }
+    
+    
+    private void OpenOverlay()
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true};
+        DialogService.Show<CreateCanvasComponent>("Create Canvas", options);
     }
 
 }
