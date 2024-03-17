@@ -1,0 +1,44 @@
+﻿@using TheoryProtocol.Models
+<MudDialog>
+    <DialogContent>
+        <EditForm EditContext="_editContext" OnValidSubmit="SubmitForm">
+            <DataAnnotationsValidator/>
+            <MudTextField @bind-Value="model.Name" Label="Name" Variant="Variant.Text" Margin="Margin.Dense" For="@(() => model.Name)"/>
+            <MudTextField @bind-Value="model.Title" Label="Title" Variant="Variant.Text" Margin="Margin.Dense" For="@(() => model.Title)"/>
+            <MudTextField @bind-Value="model.Description" Label="Description" Variant="Variant.Text" Margin="Margin.Dense" For="@(() => model.Description)"/>
+            <DialogActions>
+                <MudButton OnClick="Cancel">Cancel</MudButton>
+                <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit">Ok</MudButton>
+            </DialogActions>
+        </EditForm>
+    </DialogContent>
+</MudDialog>
+
+
+@code {
+    private EditContext _editContext;
+    private CreateCanvasModel model = new CreateCanvasModel();
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+        _editContext = new EditContext(model);
+        return base.OnInitializedAsync();
+    }
+
+    //void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    void Cancel()
+    {
+        MudDialog.Cancel();
+        //on close call the main layout and reinitialize the drawer facts list
+    }
+
+    void SubmitForm()
+    {
+        if (_editContext.Validate())
+        {
+            MudDialog.Close(DialogResult.Ok(true));
+        }
+    }
+
+}
