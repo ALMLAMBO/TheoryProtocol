@@ -32,8 +32,8 @@
             @*temp for now*@
             @foreach (var item in Canvases)
             {
-                
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@(()=>SummaryShow(item.Id))">@item.Name</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => SummaryShow(item.Id))">@item.Name</MudButton>
+
                 //when we have the models just use Model.Id for the SummaryShow parameter
             }
         </MudPaper>
@@ -44,15 +44,12 @@
 @code {
     [Parameter] public bool DrawerOpen { get; set; } = true;
     [Parameter] public EventCallback<bool> DrawerOpenChanged { get; set; }
-    //fill the list oninitialized
-    List<Canvas> _canvasList = new List<Canvas>();
-    
-    
-    [CascadingParameter]
-    public MainLayout MainLayout { get; set; }
 
-    private List<Models.Canvas> Canvases = new List<Models.Canvas>();
 
+    [CascadingParameter] public MainLayout MainLayout { get; set; }
+
+    public List<Models.Canvas> Canvases = new List<Models.Canvas>();
+    /*[Parameter] public EventCallback<List<Models.Canvas>> CanvasChanged { get; set; }*/
 
     public async Task DrawerToggle()
     {
@@ -62,8 +59,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await base.OnInitializedAsync();
         Canvases = await cs.GetCanvas();
+        await base.OnInitializedAsync();
     }
 
     private async Task SummaryShow(int id)
@@ -72,16 +69,27 @@
         {
             MainLayout.Home.Summary.showCanvas = false;
         }
+
         MainLayout.Home.SummaryIsShown = true;
         MainLayout.Home.SummaryId = id;
         await MainLayout.Home.SummaryIsShownChanged.InvokeAsync(MainLayout.Home.SummaryIsShown);
     }
-    
-    
+
+
     private void OpenOverlay()
     {
-        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true};
-        DialogService.Show<CreateCanvasComponent>("Create Canvas", options);
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
+        var parameters = new DialogParameters()
+        {
+            { "MainLayout", MainLayout }
+        };
+        DialogService.Show<CreateCanvasComponent>("Create Canvas", parameters, options);
+    }
+
+    public async Task Refresh()
+    {
+        Canvases = await cs.GetCanvas();
+        StateHasChanged();
     }
 
 }

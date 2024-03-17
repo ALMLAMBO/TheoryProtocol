@@ -3,11 +3,38 @@
 @inject FactService factService
 @inject ConnectionService connService
 
+@*<div class="d-flex flex-row">
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@ShowCloseCreateDialog" Style="margin-right: 10px">Create fact</MudButton>
+    <MudPopover Open="@isCreateDialogOpen" Class="px-12 py-6" Fixed="true" AnchorOrigin="Origin.BottomLeft">
+        <div class="d-flex flex-column">
+            <h3>Create fact</h3>
+            <MudTextField Label="Name" @bind-Value="factTitle"/>
+            <MudTextField Label="Description" @bind-Value="factDescription"/>
+            <div class="d-flex flex-row" style="margin-top: 10px; margin-bottom: 10px">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => SubmitNode())">Create</MudButton>
+                <MudButton Style="margin-left: 10px" Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => CancelCreateNodeConnection())">Cancel</MudButton>
+            </div>
+        </div>
+    </MudPopover>
+    <MudButton id="createConnectionBtn" Style="margin-right: 10px" Variant="Variant.Filled" Color="Color.Primary" Disabled="@isCreateConnectionBtnDisabled" @onclick="@(() => ShowCloseConnectionDialog())">Create Connection</MudButton>
+    <MudPopover id="createConnection" Class="px-12 py-6" P AnchorOrigin="Origin.BottomLeft" Open="@isCreateConnectionOpen">
+        <h3>Create connection</h3>
+        @for (int i = 0; i < connectionsCount; i++)
+        {
+            <div style="display: flex; flex-direction: row; margin-bottom: 10px">
+                
+            </div>
+        }
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => SubmitConnections(selectedFromFactTitle, selectedToFactTitle))">Add</MudButton>
+        <MudButton Style="margin-left: 10px" Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => CancelCreateConnections())">Cancel</MudButton>
+    </MudPopover>
+</div>*@
+
 <div style="margin-bottom: 15px">
     <MudNavMenu>
         <div class="d-flex flex-row">
-            <MudButton id="createFactBtn" Style="margin-right: 10px" Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => ShowCloseCreateDialog())">Create Fact</MudButton>
-            <MudPopover id="createFact" Class="px-12 py-6" AnchorOrigin="Origin.BottomLeft" Open="@isCreateDialogOpen">
+            <MudButton Style="margin-right: 10px" Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => ShowCloseCreateDialog())">Create Fact</MudButton>
+            <MudPopover Class="px-12 py-6" AnchorOrigin="Origin.BottomLeft" Open="@isCreateDialogOpen">
                 <h3>Create fact</h3>
                 <MudTextField Label="Name" @bind-Value="factTitle"/>
                 <MudTextField Label="Description" @bind-Value="factDescription"/>
@@ -16,8 +43,8 @@
                 <MudButton Style="margin-left: 10px" Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => CancelCreateNodeConnection())">Cancel</MudButton>
             </MudPopover>
             
-            <MudButton id="createConnectionBtn" Style="margin-right: 10px" Variant="Variant.Filled" Color="Color.Primary" Disabled="@isCreateConnectionBtnDisabled" @onclick="@(() => ShowCloseConnectionDialog())">Create Connection</MudButton>
-            <MudPopover id="createConnection" Class="px-12 py-6" P AnchorOrigin="Origin.BottomLeft" Open="@isCreateConnectionOpen">
+            <MudButton Style="margin-right: 10px" Variant="Variant.Filled" Color="Color.Primary" Disabled="@isCreateConnectionBtnDisabled" @onclick="@(() => ShowCloseConnectionDialog())">Create Connection</MudButton>
+            <MudPopover Class="px-12 py-6" P AnchorOrigin="Origin.BottomLeft" Open="@isCreateConnectionOpen">
                 <h3>Create connection</h3>
                 @for (int i = 0; i < connectionsCount; i++)
                 {
@@ -43,8 +70,8 @@
                 <MudButton Style="margin-left: 10px" Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => CancelCreateConnections())">Cancel</MudButton>
             </MudPopover>
             
-            <MudButton id="createSummaryBtn" Style="margin-right: 10px" Variant="Variant.Filled" Color="Color.Primary" @onclick="ShowSummary">Summary</MudButton>
-            <MudButton id="showCommentsBtn" Variant="Variant.Filled" Color="Color.Primary" @onclick="ShowComments" Disabled="@isShowCommentsBtnDisabled">Show Comments</MudButton>
+            <MudButton Style="margin-right: 10px" Variant="Variant.Filled" Color="Color.Primary" @onclick="ShowSummary">Summary</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="ShowComments" Disabled="@isShowCommentsBtnDisabled">Show Comments</MudButton>
         </div>
     </MudNavMenu>
 </div>
@@ -54,7 +81,7 @@
     <SnapSettings Constraints="@SnapConstraints.None"></SnapSettings>
 </SfDiagramComponent>
 
-<ConnectionComments />
+<ConnectionComments/>
 
 @code
 {
@@ -136,7 +163,7 @@
     {
         Node node = obj as Node;
         node.Width = 60;
-        node.Height = 60;        
+        node.Height = 60;
     }
 
     private void ConnectorCreating(IDiagramObject connector)
@@ -196,7 +223,8 @@
     private void SubmitNode()
     {
         nodeConnectionCount = 1;
-        Fact newFact = new Fact() {
+        Fact newFact = new Fact()
+        {
             CanvasId = canvasId,
             Title = factTitle,
             Description = factDescription
@@ -220,10 +248,11 @@
         connService.AddConnection(fromFact, toFact);
     }
 
-    public void OnSelectionChanged(SelectionChangedEventArgs args) {
+    public void OnSelectionChanged(SelectionChangedEventArgs args)
+    {
         selectedNodes.Clear();
         selectedConnectors.Clear();
-        if(args.NewValue.Count > 0)
+        if (args.NewValue.Count > 0)
         {
             foreach (var selected in args.NewValue)
             {
@@ -238,12 +267,13 @@
                     isShowCommentsBtnDisabled = false;
                 }
             }
+
             if (selectedNodes.Count > 0)
             {
                 isCreateConnectionBtnDisabled = false;
                 isShowCommentsBtnDisabled = true;
             }
-        } 
+        }
         else
         {
             isCreateConnectionBtnDisabled = true;
@@ -259,6 +289,6 @@
 
     private async Task ShowComments()
     {
-        isCommentsPanelHidden = true;   
+        isCommentsPanelHidden = true;
     }
 }
