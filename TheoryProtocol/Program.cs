@@ -41,6 +41,7 @@ builder.Services.AddScoped<IFirestoreRepository<Vote>>(sp => voteReposisory);
 
 // Services
 builder.Services.AddScoped<UserService>(sp => new UserService(userRepository));
+builder.Services.AddScoped<CanvasService>(sp => new CanvasService(canvasRepository));
 builder.Services.AddScoped<FirestoreService>();
 
 var app = builder.Build();

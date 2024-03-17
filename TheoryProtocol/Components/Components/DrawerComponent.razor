@@ -1,25 +1,33 @@
 ﻿@using TheoryProtocol.Components.Layout
 @inject IDialogService DialogService
+@using TheoryProtocol.Models
+@inject CanvasService cs
+
 <MudAppBar Elevation="0">
-    <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())"/>
+    <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Secondary" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
     <MudSpacer/>
-    <MudIconButton Icon="@Icons.Custom.Brands.MudBlazor" Color="Color.Inherit" Link="https://mudblazor.com/" Target="_blank"/>
-    <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Link="https://github.com/MudBlazor/MudBlazor/" Target="_blank"/>
+    <!--<MudIconButton Icon="@Icons.Custom.Brands.MudBlazor" Color="Color.Inherit" Link="https://mudblazor.com/" Target="_blank"/>-->
+    <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Secondary" Link="https://github.com/ALMLAMBO/TheoryProtocol" Target="_blank" />
 </MudAppBar>
-<MudDrawer @bind-Open="DrawerOpen" Elevation="1">
+<MudDrawer @bind-Open="DrawerOpen" Style="border:1px solid black" Elevation="1">
     <MudDrawerHeader>
         <MudPaper Class="d-flex flex-column align-content-center flex-wrap flex-grow-1 gap-4" Elevation="0">
             <MudText Typo="Typo.h6">MudBlazorTemplates1</MudText>
             <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Info" @onclick="OpenOverlay">Create</MudButton>
             
+        <MudPaper Class="d-flex flex-column align-content-center flex-wrap flex-grow-1 gap-4" Elevation="0" Style="background-color:#093125;">
+            <div class="d-flex justify-center" style="background-color:#093125;">
+            <MudImage ObjectPosition="ObjectPosition.Center" Style="width:50%; height:auto; text-align:center;" Src="img/bunny.png" />
+
+                <MudText Typo="Typo.h5" Style="font-family: Impact; color:#FCB604;margin-left:10px;">The Rabbit Hole</MudText>
+            </div>
             @*temp for now*@
-            @*@for (int i = 0; i < 5; i++)
+            @foreach (var item in Canvases)
             {
                 
-                var num = i+1;
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@(()=>SummaryShow(num))">Story 1</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@(()=>SummaryShow(item.Id))">@item.Name</MudButton>
                 //when we have the models just use Model.Id for the SummaryShow parameter
-            }*@
+            }
         </MudPaper>
     </MudDrawerHeader>
     <NavMenu/>
@@ -35,10 +43,19 @@
     [CascadingParameter]
     public MainLayout MainLayout { get; set; }
 
+    private List<Models.Canvas> Canvases = new List<Models.Canvas>();
+
+
     public async Task DrawerToggle()
     {
         DrawerOpen = !DrawerOpen;
         await DrawerOpenChanged.InvokeAsync(DrawerOpen);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        Canvases = await cs.GetCanvas();
     }
 
     private async Task SummaryShow(int id)
