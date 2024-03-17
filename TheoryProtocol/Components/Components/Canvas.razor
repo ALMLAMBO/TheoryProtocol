@@ -2,33 +2,8 @@
 @using Syncfusion.Blazor.Diagram
 @inject FactService factService
 @inject ConnectionService connService
-
-@*<div class="d-flex flex-row">
-    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@ShowCloseCreateDialog" Style="margin-right: 10px">Create fact</MudButton>
-    <MudPopover Open="@isCreateDialogOpen" Class="px-12 py-6" Fixed="true" AnchorOrigin="Origin.BottomLeft">
-        <div class="d-flex flex-column">
-            <h3>Create fact</h3>
-            <MudTextField Label="Name" @bind-Value="factTitle"/>
-            <MudTextField Label="Description" @bind-Value="factDescription"/>
-            <div class="d-flex flex-row" style="margin-top: 10px; margin-bottom: 10px">
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => SubmitNode())">Create</MudButton>
-                <MudButton Style="margin-left: 10px" Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => CancelCreateNodeConnection())">Cancel</MudButton>
-            </div>
-        </div>
-    </MudPopover>
-    <MudButton id="createConnectionBtn" Style="margin-right: 10px" Variant="Variant.Filled" Color="Color.Primary" Disabled="@isCreateConnectionBtnDisabled" @onclick="@(() => ShowCloseConnectionDialog())">Create Connection</MudButton>
-    <MudPopover id="createConnection" Class="px-12 py-6" P AnchorOrigin="Origin.BottomLeft" Open="@isCreateConnectionOpen">
-        <h3>Create connection</h3>
-        @for (int i = 0; i < connectionsCount; i++)
-        {
-            <div style="display: flex; flex-direction: row; margin-bottom: 10px">
-                
-            </div>
-        }
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => SubmitConnections(selectedFromFactTitle, selectedToFactTitle))">Add</MudButton>
-        <MudButton Style="margin-left: 10px" Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => CancelCreateConnections())">Cancel</MudButton>
-    </MudPopover>
-</div>*@
+@inject CommentService commentService
+@inject IDialogService dialogService
 
 <div style="margin-bottom: 15px">
     <MudNavMenu>
@@ -76,12 +51,10 @@
     </MudNavMenu>
 </div>
 
-<div>
-    <SfDiagramComponent Width="100%" Height="600px" @bind-Nodes="@nodes" @bind-Connectors="@connectors" NodeCreating="NodeCreating" ConnectorCreating="ConnectorCreating" ID="id" SelectionChanged="OnSelectionChanged" @ref="diagram">
-        <Layout Type="LayoutType.RadialTree" HorizontalSpacing="30" VerticalSpacing="30" Root="@root"></Layout>
-        <SnapSettings Constraints="@SnapConstraints.None"></SnapSettings>
-    </SfDiagramComponent>
-</div>
+<SfDiagramComponent Width="100%" Height="600px" @bind-Nodes="@nodes" @bind-Connectors="@connectors" NodeCreating="NodeCreating" ConnectorCreating="ConnectorCreating" ID="id" SelectionChanged="OnSelectionChanged">
+    <Layout Type="LayoutType.RadialTree" HorizontalSpacing="30" VerticalSpacing="30" Root="@root"></Layout>
+    <SnapSettings Constraints="@SnapConstraints.None"></SnapSettings>
+</SfDiagramComponent>
 
 <ConnectionComments/>
 
@@ -114,6 +87,10 @@
     List<Fact> facts = new List<Fact>();
     List<Connection> connections = new List<Connection>();
 
+    // Comment details
+    //[CascadingParameter] MudDialogInstance MudCommentsDialog { get; set; }
+    public List<Comment> comments { get; set; }
+
     DiagramObjectCollection<Node> nodes = new DiagramObjectCollection<Node>();
     DiagramObjectCollection<Connector> connectors = new DiagramObjectCollection<Connector>();
     
@@ -134,7 +111,7 @@
                             new ShapeAnnotation() { Content = facts[i].Title }
                         },
                         OffsetY = 100 * i,
-                        OffsetX = 500
+                        OffsetX = 200
                     }
                 );
             }
@@ -145,13 +122,15 @@
             {
                 connectors.Add(new Connector()
                     {
-                        ID = connections[i].Id.ToString() + "dash",
+                        ID = connections[i].Id.ToString(),
                         SourceID = connections[i].StartPointId.ToString(),
                         TargetID = connections[i].EndPointId.ToString(),
                         Constraints = (ConnectorConstraints)0x2363E
                     }
                 );
             }
+
+            comments = await commentService.GetCommentsByConnectionAsync(1);
         }
     }
 
@@ -289,8 +268,29 @@
         await ShowCanvasChanged.InvokeAsync(ShowCanvas);
     }
 
-    private async Task ShowComments()
+    private void ShowComments()
     {
-        isCommentsPanelHidden = true;
+        var dialogParams = new DialogParameters
+            {
+                ["Comments"] = comments,
+                ["UserId"] = userId,
+                ["ConnectionId"] = int.Parse(selectedConnectors.First().ID)
+            };
+
+        //isCommentsPanelHidden = false;
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+        dialogService.Show<CommentsComponent>("Comments", dialogParams, options);
     }
+
+
+    private void OpenVoteDialog()
+    {
+        DialogOptions options = new DialogOptions
+            {
+                CloseOnEscapeKey = true
+            };
+
+        //dialogService.Show<VoteConnection>("Vote", options);
+    }
+
 }

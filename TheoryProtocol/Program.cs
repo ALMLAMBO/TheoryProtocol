@@ -46,6 +46,7 @@ builder.Services.AddScoped<ConnectionService>(sp => new ConnectionService(connec
 builder.Services.AddScoped<FactService>(sp => new FactService(factRepository));
 builder.Services.AddScoped<UserService>(sp => new UserService(userRepository));
 builder.Services.AddScoped<CanvasService>(sp => new CanvasService(canvasRepository));
+builder.Services.AddScoped<CommentService>(sp => new CommentService(commentRepository));
 builder.Services.AddScoped<FirestoreService>();
 
 var app = builder.Build();

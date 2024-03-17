@@ -1,5 +1,4 @@
 @using TheoryProtocol.Components.Layout
-<MudText Align="Align.Center" Typo="Typo.h1">Summary</MudText>
 <MudText Align="Align.Center" Typo="Typo.h1" Style="font-family: Impact">Summary</MudText>
 
 @if (showCanvas)
@@ -7,7 +6,7 @@
     <Canvas @bind-ShowCanvas="showCanvas" Id="Id"></Canvas>
 }
 
-<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="ShowCanvas">Show Canvas</MudButton>
+<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="ShowCanvas">Show Board</MudButton>
 
 @code
 {

@@ -1,5 +1,7 @@
 ﻿using Google.Cloud.Firestore;
+using Google.Protobuf.WellKnownTypes;
 using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace TheoryProtocol.Repositories
 {
@@ -34,6 +36,12 @@ namespace TheoryProtocol.Repositories
 
             return lstT;
         }
+        /*public async Task<List<T>> GetAllAsyncUpg()
+        {
+            DocumentReference ds = await _firestoreDb
+                .Collection(_collectionName)
+                .GetSnapshotAsync();
+        }*/
 
         public async Task<List<T>> GetByFieldIdAsync(string field,int id)
         {
@@ -46,6 +54,10 @@ namespace TheoryProtocol.Repositories
                 if (documentSnapshot.Exists)
                 {
                     Dictionary<string, object> t = documentSnapshot.ToDictionary();
+                    if(t.ContainsKey("Created"))
+                    {
+                        t["Created"] = ((Google.Cloud.Firestore.Timestamp)t["Created"]).ToDateTime();
+                    }
                     string json = JsonConvert.SerializeObject(t);
                     T newT = JsonConvert.DeserializeObject<T>(json);
                     lstT.Add(newT);
