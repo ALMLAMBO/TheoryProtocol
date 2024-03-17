@@ -73,6 +73,7 @@
 
         MainLayout.Home.SummaryIsShown = true;
         MainLayout.Home.SummaryId = id;
+        MainLayout.Title = Canvases[id].Name;
         await MainLayout.Home.SummaryIsShownChanged.InvokeAsync(MainLayout.Home.SummaryIsShown);
     }
 

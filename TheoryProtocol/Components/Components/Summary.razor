@@ -1,24 +1,37 @@
 @using TheoryProtocol.Components.Layout
-<MudText Align="Align.Center" Typo="Typo.h1" Style="font-family: Impact">Summary</MudText>
+<MudText Align="Align.Center" Typo="Typo.h2" Style="font-family: Impact">@MainLayout.Title</MudText>
 
 @if (showCanvas)
 {
     <Canvas @bind-ShowCanvas="showCanvas" Id="Id"></Canvas>
+    
 }
 
-<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="ShowCanvas">Show Board</MudButton>
+   <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="ShowCanvas">@buttonText</MudButton>
+
 
 @code
 {
     [Parameter] public int Id { get; set; }
     public bool showCanvas = false;
-    
+    private string titleText = "";
+
     [CascadingParameter]
     public MainLayout MainLayout { get; set; }
 
+    private string buttonText = "Show Board";
 
     public void ShowCanvas()
     {
         showCanvas = !showCanvas;
+        if (showCanvas)
+        {
+            buttonText = "Close Board";
+        }
+        else
+        {
+            buttonText = "Show Board";
+        }
+
     }
 }
