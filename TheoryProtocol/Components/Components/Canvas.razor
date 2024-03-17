@@ -56,20 +56,6 @@
     <SnapSettings Constraints="@SnapConstraints.None"></SnapSettings>
 </SfDiagramComponent>
 
-@* Comments *@
-<div style="width: 100%">
-    @foreach (Comment comment in comments)
-    {
-        <MudPaper Outlined="true" Elevation="3" Style="margin-bottom: 10px">
-            <MudText>@string.Join(" ", comment.Created, comment.Created)</MudText>
-                <MudText Typo="Typo.h5">@comment.Content</MudText>
-            </MudPaper>
-    }
-    <MudPaper>
-        <MudButton Color="Color.Primary" @onclick="OpenVoteDialog">Vote</MudButton>
-    </MudPaper>
-</div>
-
 @code
 {
     bool isCreateDialogOpen = false;
@@ -81,6 +67,7 @@
 
     // Fact details
     public int canvasId = 0;
+    public int userId = 0;
     public string factTitle { get; set; }
     public string factDescription { get; set; }
 
@@ -99,7 +86,8 @@
     List<Connection> connections = new List<Connection>();
 
     // Comment details
-    public List<Comment> comments = new List<Comment>();
+    //[CascadingParameter] MudDialogInstance MudCommentsDialog { get; set; }
+    public List<Comment> comments { get; set; }
 
     DiagramObjectCollection<Node> nodes = new DiagramObjectCollection<Node>();
     DiagramObjectCollection<Connector> connectors = new DiagramObjectCollection<Connector>();
@@ -119,7 +107,8 @@
                         {
                             new ShapeAnnotation() { Content = facts[i].Title }
                         },
-                        OffsetY = 100 * i
+                        OffsetY = 100 * i,
+                        OffsetX = 200
                     }
                 );
             }
@@ -130,7 +119,7 @@
             {
                 connectors.Add(new Connector()
                     {
-                        ID = connections[i].Id.ToString() + "dash",
+                        ID = connections[i].Id.ToString(),
                         SourceID = connections[i].StartPointId.ToString(),
                         TargetID = connections[i].EndPointId.ToString(),
                         Constraints = (ConnectorConstraints)0x2363E
@@ -278,7 +267,16 @@
 
     private void ShowComments()
     {
-        isCommentsPanelHidden = false;
+        var dialogParams = new DialogParameters
+            {
+                ["Comments"] = comments,
+                ["UserId"] = userId,
+                ["ConnectionId"] = int.Parse(selectedConnectors.First().ID)
+            };
+
+        //isCommentsPanelHidden = false;
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+        dialogService.Show<CommentsComponent>("Comments", dialogParams, options);
     }
 
 
@@ -289,7 +287,7 @@
                 CloseOnEscapeKey = true
             };
 
-        dialogService.Show<VoteConnection>("Vote", options);
+        //dialogService.Show<VoteConnection>("Vote", options);
     }
 
 }

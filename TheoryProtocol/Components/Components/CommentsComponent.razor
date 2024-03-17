@@ -1,0 +1,47 @@
+﻿@using TheoryProtocol.Models
+@inject CommentService commentService
+
+@* Comments *@
+<MudDialog>
+    <DialogContent>
+        <div style="width: 100%">
+            @foreach (Comment comment in Comments.OrderBy(x => x.Created))
+            {
+                <MudPaper Outlined="true" Elevation="3" Style="margin-bottom: 10px">
+                    <MudText>@string.Join(" ", comment.Created)</MudText>
+                        <MudText Typo="Typo.h5">@comment.Content</MudText>
+                    </MudPaper>
+            }
+            <MudPaper>
+                @*<MudButton Color="Color.Primary" @onclick="OpenVoteDialog">Vote</MudButton>*@
+            </MudPaper>
+            <h3>comment yourself..</h3>
+            <MudTextField Label="your comment" @bind-Value="commentContent"/>
+
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => SubmitComment())">Post</MudButton>
+        </div>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    // Comment details
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public List<Comment> Comments { get; set; }
+    [Parameter] public int ConnectionId { get; set; }
+    [Parameter] public int UserId { get; set; }
+    private string commentContent;
+
+    public void SubmitComment()
+    {
+        Comment newComment = new Comment()
+        {
+            Created = DateTime.Now.ToUniversalTime(),
+            Content = commentContent,
+            UserId = UserId,
+            ConnectionId = ConnectionId
+        };
+
+        commentService.AddComment(newComment);
+
+    }
+}
