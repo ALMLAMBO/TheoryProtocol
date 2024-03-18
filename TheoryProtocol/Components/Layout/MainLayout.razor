@@ -1,5 +1,4 @@
-﻿@using TheoryProtocol.Components.Pages
-@inherits LayoutComponentBase
+﻿@inherits LayoutComponentBase
 
 <MyMudThemeProvider/>
 <MyMudProviders/>
@@ -7,7 +6,7 @@
 <MudLayout>
     <DrawerComponent @ref="_drawerComponent"></DrawerComponent>
     <MudMainContent>
-        <MudContainer Fixed="true" Style="margin: 10px">
+        <MudContainer Fixed="true">
             <CascadingValue Value="_drawerComponent">
                 @Body
             </CascadingValue>
@@ -16,12 +15,5 @@
 </MudLayout>
 
 @code {
-
-    /*public DrawerComponent drawerComponent;
-    public Home Home;
-    public bool drawerOpen = true;
-    public bool summaryIsShown = false;
-    public bool boardIsShown = false;
-    public string Title = "";*/
     DrawerComponent _drawerComponent;
 }

@@ -52,7 +52,7 @@
 </div>
 
 <!--<div @ondblclick="DoubleClick">-->
-<SfDiagramComponent Width="100%" Height="600px" @bind-Nodes="@nodes" @bind-Connectors="@connectors" NodeCreating="NodeCreating" ConnectorCreating="ConnectorCreating" ID="id" SelectionChanged="OnSelectionChanged">
+<SfDiagramComponent @ref="diagram" Width="100%" Height="600px" ScrollSettings="@(new ScrollSettings() { VerticalOffset = 300, HorizontalOffset = 600 })" @bind-Nodes="@nodes" @bind-Connectors="@connectors" NodeCreating="NodeCreating" ConnectorCreating="ConnectorCreating" ID="id" SelectionChanged="OnSelectionChanged">
     <Layout Type="LayoutType.RadialTree" HorizontalSpacing="30" VerticalSpacing="30" Root="@root"></Layout>
     <SnapSettings Constraints="@SnapConstraints.None"></SnapSettings>
 </SfDiagramComponent>
@@ -62,8 +62,6 @@
 
 @code
 {
-    [Parameter] public Canvas CanvasObj {get; set;}
-    [Parameter] public EventCallback<Canvas> CanvasObjChanged {get; set;}
 
     SfDiagramComponent diagram;
     bool isCreateDialogOpen = false;
@@ -71,8 +69,6 @@
     bool isCommentsPanelHidden = true;
     string root;
     int userId;
-    [Parameter] public bool ShowCanvas { get; set; } = false;
-    [Parameter] public EventCallback<bool> ShowCanvasChanged { get; set; }
 
     // Fact details
     [Parameter] public int Id { get; set; }
@@ -100,16 +96,6 @@
     DiagramObjectCollection<Node> nodes = new DiagramObjectCollection<Node>();
     DiagramObjectCollection<Connector> connectors = new DiagramObjectCollection<Connector>();
 
-    protected override async Task OnParametersSetAsync()
-    {
-        CanvasObjChanged.InvokeAsync();
-    }
-
-    /* protected override Task OnInitializedAsync()
-          {
-          TitleChanged.InvokeAsync("")
-          return base.OnInitializedAsync();
-      }*/
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -217,7 +203,7 @@
         isCreateDialogOpen = false;
     }
 
-    private void SubmitNode()
+    private async Task SubmitNode()
     {
         nodeConnectionCount = 1;
         Fact newFact = new Fact()
@@ -227,7 +213,20 @@
             Description = factDescription
         };
 
-        factService.AddFact(newFact);
+        //factService.AddFact(newFact);
+        facts = await factService.GetFactsByCanvasAsync(Id);
+        connections = await connService.GetConnectionsByCanvasAsync(Id);
+        nodes.Add(new Node()
+        {
+            ID = facts.Last().Id.ToString(),
+            Annotations = new DiagramObjectCollection<ShapeAnnotation>()
+            {
+                new ShapeAnnotation() { Content = facts.Last().Title }
+            },
+            OffsetY = 500,
+            OffsetX = 500
+        });
+        await diagram.RefreshDataSource();
     }
 
     private void CancelCreateConnections()
@@ -278,34 +277,17 @@
         }
     }
 
-    private async Task ShowSummary()
-    {
-        ShowCanvas = !ShowCanvas;
-        await ShowCanvasChanged.InvokeAsync(ShowCanvas);
-    }
-
     private void ShowComments()
     {
         var dialogParams = new DialogParameters
-            {
-                ["Comments"] = comments,
-                ["UserId"] = userId,
-                ["ConnectionId"] = int.Parse(selectedConnectors.First().ID)
-            };
+        {
+            ["Comments"] = comments,
+            ["UserId"] = userId,
+            ["ConnectionId"] = int.Parse(selectedConnectors.First().ID)
+        };
 
         //isCommentsPanelHidden = false;
         var options = new DialogOptions { CloseOnEscapeKey = true };
         dialogService.Show<CommentsComponent>("Comments", dialogParams, options);
-    }
-
-
-    private void OpenVoteDialog()
-    {
-        DialogOptions options = new DialogOptions
-            {
-                CloseOnEscapeKey = true
-            };
-
-        //dialogService.Show<VoteConnection>("Vote", options);
     }
 }

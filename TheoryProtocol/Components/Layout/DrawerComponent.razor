@@ -1,6 +1,7 @@
 ﻿@using Canvas = TheoryProtocol.Models.Canvas
 @inject CanvasService cs;
 @inject NavigationManager NavManager;
+@inject IDialogService DialogService
 <MudAppBar Elevation="1">
     <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Secondary" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())"/>
     <MudSpacer/>
@@ -9,24 +10,22 @@
 <MudDrawer @bind-Open="_drawerOpen" Elevation="2">
     <MudDrawerHeader Class="d-flex flex-column">
         <div class="d-flex flex-column justify-center" style="background-color:#093125;">
-            <div class="d-flex flex-row">
-                <NavLink href="/">
-                    <div class="d-flex">
-                        <MudImage ObjectPosition="ObjectPosition.Center" Style="width:50%; height:auto; text-align:center;" Src="img/bunny.png"/>
-                        <MudText Typo="Typo.h5" Style="font-family: Impact; color:#FCB604;margin-left:10px;">
-                            <div>The</div>
-                            <div>Rabbit</div>
-                            <div>Hole</div>
-                        </MudText>
-                    </div>
-                </NavLink>
-            </div>
+            <NavLink href="/">
+                <div class="d-flex flex-row">
+                    <MudImage ObjectPosition="ObjectPosition.Center" Style="width:50%; height:auto; text-align:center;" Src="img/bunny.png"/>
+                    <MudText Typo="Typo.h5" Style="font-family: Impact; color:#FCB604;margin-left:10px;">
+                        <div>The</div>
+                        <div>Rabbit</div>
+                        <div>Hole</div>
+                    </MudText>
+                </div>
+            </NavLink>
             @*add on click here*@
-            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Info" Style="margin-top: 10px"/>
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Info" Style="margin-top: 10px; margin-bottom: 10px" @onclick="OpenCreateCanvas"/>
             @foreach (var canvas in _canvases)
             {
                 @*<MudNavLink Href=@($"/summary/{canvas.Id}") Class="red-text">@canvas.Name</MudNavLink>*@
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => OpenSummary(canvas.Id))">@canvas.Name</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Href=@($"/summary/{canvas.Id}") Style="margin-bottom: 5px">@canvas.Name</MudButton>
             }
         </div>
     </MudDrawerHeader>
@@ -52,9 +51,18 @@
         StateHasChanged();
     }
 
-    private void OpenSummary(int id)
+    private void OpenCreateCanvas()
     {
-        NavManager.NavigateTo($"/summary/{id}");
+        int canvasId = _canvases.FirstOrDefault().Id + 1;
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
+        var parameters = new DialogParameters() { { "DrawerComponent", this }, { "CanvasId", canvasId } };
+        DialogService.Show<CreateCanvasComponent>("Create Canvas", parameters, options);
+    }
+
+    public async Task UpdateSidebar()
+    {
+        _canvases = await cs.GetCanvas();
+        StateHasChanged();
     }
 
 }

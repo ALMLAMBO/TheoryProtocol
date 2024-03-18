@@ -1,57 +1,52 @@
-﻿@*@using TheoryProtocol.Models
+﻿@using TheoryProtocol.Models
 @using TheoryProtocol.Components.Layout
 @inject CanvasService CanvasService
 @inject FactService FactService;
-<MudDialog>
-    <DialogContent>
-        <EditForm EditContext="_editContext" OnValidSubmit="SubmitForm">
+<EditForm EditContext="_editContext" OnValidSubmit="SubmitForm">
+    <MudDialog>
+        <DialogContent>
             <DataAnnotationsValidator/>
             <MudTextField @bind-Value="model.Name" Label="Name" Variant="Variant.Text" Margin="Margin.Dense" For="@(() => model.Name)"/>
             <MudTextField @bind-Value="model.Title" Label="Title" Variant="Variant.Text" Margin="Margin.Dense" For="@(() => model.Title)"/>
             <MudTextField @bind-Value="model.Description" Label="Description" Variant="Variant.Text" Margin="Margin.Dense" For="@(() => model.Description)"/>
-            <DialogActions>
-                <MudButton OnClick="Cancel">Cancel</MudButton>
-                <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit">Ok</MudButton>
-            </DialogActions>
-        </EditForm>
-    </DialogContent>
-</MudDialog>
+        </DialogContent>
+        <DialogActions>
+            <MudButton OnClick="Cancel">Cancel</MudButton>
+            <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit">Ok</MudButton>
+        </DialogActions>
+    </MudDialog>
+</EditForm>
 
 
 @code {
     private EditContext _editContext;
     private CreateCanvasModel model = new CreateCanvasModel();
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
-    [Parameter] public MainLayout MainLayout { get; set; }
     [Parameter] public int CanvasId { get; set; }
+    [Parameter] public DrawerComponent DrawerComponent { get; set; }
+
     protected override Task OnInitializedAsync()
     {
         _editContext = new EditContext(model);
         return base.OnInitializedAsync();
     }
 
-    //void Submit() => MudDialog.Close(DialogResult.Ok(true));
     void Cancel()
     {
         MudDialog.Cancel();
-        //on close call the main layout and reinitialize the drawer facts list
     }
 
     async Task SubmitForm()
     {
         if (_editContext.Validate())
         {
-            MudDialog.Close(DialogResult.Ok(true));
-            /*MainLayout.drawerComponent.Canvases = await FirestoreService.GetAllCanvases();
-            MainLayout.drawerComponent.Canvases.Add(new Models.Canvas() { Name = "Test" });*/
-            Models.Canvas canvasModel = new Models.Canvas() { Name = model.Name, OwnerId = 0};
+            Models.Canvas canvasModel = new Models.Canvas() { Name = model.Name, OwnerId = 0 };
             Fact newFact = new Fact() { CanvasId = CanvasId, Description = model.Description, Title = model.Title };
-            //MainLayout.drawerComponent.Canvases.Add(canvasModel);
             FactService.AddFact(newFact);
             await CanvasService.AddCanvas(canvasModel);
-            await MainLayout.drawerComponent.Refresh();
-            
+            await DrawerComponent.UpdateSidebar();
+            MudDialog.Close(DialogResult.Ok(true));
         }
     }
 
-}*@
+}
