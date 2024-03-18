@@ -3,22 +3,25 @@
 
 <MyMudThemeProvider/>
 <MyMudProviders/>
-<CascadingValue Value="this">
-    <MudLayout>
-        <DrawerComponent @bind-DrawerOpen="drawerOpen" @ref="drawerComponent"></DrawerComponent>
-        <MudMainContent>
-            <MudContainer Fixed="true" Style="margin: 10px">
-                <Home @bind-SummaryIsShown="summaryIsShown" @ref="Home"></Home>
-            </MudContainer>
-        </MudMainContent>
-    </MudLayout>
-</CascadingValue>
+
+<MudLayout>
+    <DrawerComponent @ref="_drawerComponent"></DrawerComponent>
+    <MudMainContent>
+        <MudContainer Fixed="true" Style="margin: 10px">
+            <CascadingValue Value="_drawerComponent">
+                @Body
+            </CascadingValue>
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
 
 @code {
-    public DrawerComponent drawerComponent;
+
+    /*public DrawerComponent drawerComponent;
     public Home Home;
     public bool drawerOpen = true;
     public bool summaryIsShown = false;
     public bool boardIsShown = false;
-    public string Title = "";
+    public string Title = "";*/
+    DrawerComponent _drawerComponent;
 }

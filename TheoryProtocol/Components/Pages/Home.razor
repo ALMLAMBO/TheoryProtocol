@@ -5,49 +5,20 @@
 
 <PageTitle>Home</PageTitle>
 
-@if (!SummaryIsShown)
-{
-    <MudText Align="Align.Center" Typo="Typo.h2" Style="font-family: Impact">Welcome to The Rabbit Hole!</MudText>
-    <MudText Align="Align.Center" Typo="Typo.h4">See different stories or participate in their creation</MudText>
+<MudText Align="Align.Center" Typo="Typo.h2" Style="font-family: Impact">Welcome to The Rabbit Hole!</MudText>
+<MudText Align="Align.Center" Typo="Typo.h4">See different stories or participate in their creation</MudText>
 
-    <MudPaper Class="d-flex justify-center align-start flex-grow-1 gap-4" Elevation="0" style="background-color:#F4E5C0;">
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="width: 300px; margin-top:5%;" @onclick="Click">Become a member of the madness</MudButton>
-    </MudPaper>
+<MudPaper Class="d-flex justify-center align-start flex-grow-1 gap-4" Elevation="0" style="background-color:#F4E5C0;">
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="width: 300px; margin-top:5%;" @onclick="Click">Become a member of the madness</MudButton>
+</MudPaper>
 
-}
-else
-{
-   
-        <Summary Id="SummaryId" @ref="Summary"></Summary>
-   
-}
-<!--<ul>
-        @foreach (var item in users)
-        {
-            <li>
-                <br/> <b>@item.Username</b>
-            </li>
-        }
-    </ul>-->
 
 @code
 {
-    [CascadingParameter]
-    public MainLayout MainLayout { get; set; }
-    [Parameter] public bool SummaryIsShown { get; set; } = false;
-    [Parameter] public EventCallback<bool> SummaryIsShownChanged { get; set; }
-    public int SummaryId { get; set; }
-    private List<User> users = new List<User>();
-    public Summary Summary = new Summary();
-    
-    async Task Click()
+    [CascadingParameter] DrawerComponent DrawerComponent { get; set; }
+
+    void Click()
     {
-        await MainLayout.drawerComponent.DrawerToggle();
-    }
-    
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-        users = await us.GetUsers();
+        DrawerComponent.DrawerTogglePublic();
     }
 }

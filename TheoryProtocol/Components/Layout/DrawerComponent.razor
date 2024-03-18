@@ -1,0 +1,60 @@
+﻿@using Canvas = TheoryProtocol.Models.Canvas
+@inject CanvasService cs;
+@inject NavigationManager NavManager;
+<MudAppBar Elevation="1">
+    <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Secondary" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())"/>
+    <MudSpacer/>
+    <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Secondary" Link="https://github.com/ALMLAMBO/TheoryProtocol" Target="_blank"/>
+</MudAppBar>
+<MudDrawer @bind-Open="_drawerOpen" Elevation="2">
+    <MudDrawerHeader Class="d-flex flex-column">
+        <div class="d-flex flex-column justify-center" style="background-color:#093125;">
+            <div class="d-flex flex-row">
+                <NavLink href="/">
+                    <div class="d-flex">
+                        <MudImage ObjectPosition="ObjectPosition.Center" Style="width:50%; height:auto; text-align:center;" Src="img/bunny.png"/>
+                        <MudText Typo="Typo.h5" Style="font-family: Impact; color:#FCB604;margin-left:10px;">
+                            <div>The</div>
+                            <div>Rabbit</div>
+                            <div>Hole</div>
+                        </MudText>
+                    </div>
+                </NavLink>
+            </div>
+            @*add on click here*@
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Info" Style="margin-top: 10px"/>
+            @foreach (var canvas in _canvases)
+            {
+                @*<MudNavLink Href=@($"/summary/{canvas.Id}") Class="red-text">@canvas.Name</MudNavLink>*@
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => OpenSummary(canvas.Id))">@canvas.Name</MudButton>
+            }
+        </div>
+    </MudDrawerHeader>
+</MudDrawer>
+
+@code {
+    bool _drawerOpen = true;
+    List<Canvas> _canvases = new List<Canvas>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _canvases = await cs.GetCanvas();
+    }
+
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+
+    public void DrawerTogglePublic()
+    {
+        DrawerToggle();
+        StateHasChanged();
+    }
+
+    private void OpenSummary(int id)
+    {
+        NavManager.NavigateTo($"/summary/{id}");
+    }
+
+}

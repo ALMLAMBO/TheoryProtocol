@@ -1,24 +1,30 @@
+@page "/summary/{id:int}"
 @using TheoryProtocol.Components.Layout
 @using TheoryProtocol.Models
 @using System.Text
 @inject OpenAiService ai
 @inject FactService fs
-<MudText Align="Align.Center" Typo="Typo.h2" Style="font-family: Impact">@MainLayout.Title</MudText>
+@inject NavigationManager NavigationManager;
+<MudText Align="Align.Center" Typo="Typo.h2" Style="font-family: Impact">Summary</MudText>
 
+<h1>@Id</h1>
 @if (showCanvas)
 {
     <Canvas @bind-ShowCanvas="showCanvas" Id="Id"></Canvas>
     
 }
-
-   <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="ShowCanvas">@buttonText</MudButton>
-   <MudText>@summary</MudText>
+else
+{
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="ShowCanvas">Show Board</MudButton>
+    <MudText>@summary</MudText>   
+}
 
 @code
 {
     [Parameter] public int Id { get; set; }
     public bool showCanvas = false;
     private string titleText = "";
+    Canvas canvas;
 
     [CascadingParameter]
     public MainLayout MainLayout { get; set; }
@@ -26,16 +32,20 @@
     private string buttonText = "Show Board";
     private string summary = "";
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
-        List<Fact> facts = await fs.GetFactsByCanvasAsync(Id);
+        /*List<Fact> facts = await fs.GetFactsByCanvasAsync(Id);
         StringBuilder sb = new StringBuilder();
         foreach (var fact in facts)
         {
             sb.Append(fact.Description);
         }
-        summary=await ai.Prompt(sb.ToString() + "\n Summarize");
+        summary=await ai.Prompt(sb.ToString() + "\n Summarize");*/
+        Random rnd = new Random();
+        summary = rnd.Next(1, 101).ToString();
+        showCanvas = false;
     }
+
     public void ShowCanvas()
     {
         showCanvas = !showCanvas;
