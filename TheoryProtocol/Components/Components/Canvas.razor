@@ -52,17 +52,17 @@
 </div>
 
 <!--<div @ondblclick="DoubleClick">-->
-<SfDiagramComponent @ref="diagram" Width="100%" Height="600px" ScrollSettings="@(new ScrollSettings() { VerticalOffset = 300, HorizontalOffset = 600 })" @bind-Nodes="@nodes" @bind-Connectors="@connectors" NodeCreating="NodeCreating" ConnectorCreating="ConnectorCreating" ID="id" SelectionChanged="OnSelectionChanged">
+<SfDiagramComponent @ref="diagram" Width="100%" Height="600px" @bind-Nodes="@nodes" @bind-Connectors="@connectors" NodeCreating="NodeCreating" ConnectorCreating="ConnectorCreating" ID="id" SelectionChanged="OnSelectionChanged">
     <Layout Type="LayoutType.RadialTree" HorizontalSpacing="30" VerticalSpacing="30" Root="@root"></Layout>
     <SnapSettings Constraints="@SnapConstraints.None"></SnapSettings>
 </SfDiagramComponent>
 <!--</div>-->
 
+
 <ConnectionComments/>
 
 @code
 {
-
     SfDiagramComponent diagram;
     bool isCreateDialogOpen = false;
     bool isCreateConnectionOpen = false;
@@ -96,7 +96,6 @@
     DiagramObjectCollection<Node> nodes = new DiagramObjectCollection<Node>();
     DiagramObjectCollection<Connector> connectors = new DiagramObjectCollection<Connector>();
 
-
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -105,17 +104,34 @@
             connections = await connService.GetConnectionsByCanvasAsync(Id);
             for (int i = 0; i < facts.Count; i++)
             {
-                nodes.Add(new Node()
-                    {
-                        ID = facts[i].Id.ToString(),
-                        Annotations = new DiagramObjectCollection<ShapeAnnotation>()
+                if (i == 0)
+                {
+                    nodes.Add(new Node()
                         {
-                            new ShapeAnnotation() { Content = facts[i].Title }
-                        },
-                        OffsetY = 100 * i,
-                        OffsetX = 200
-                    }
-                );
+                            ID = facts[i].Id.ToString(),
+                            Annotations = new DiagramObjectCollection<ShapeAnnotation>()
+                            {
+                                new ShapeAnnotation() { Content = facts[i].Title }
+                            },
+                            OffsetY = 100,
+                            OffsetX = 500
+                        }
+                    );
+                }
+                else
+                {
+                    nodes.Add(new Node()
+                        {
+                            ID = facts[i].Id.ToString(),
+                            Annotations = new DiagramObjectCollection<ShapeAnnotation>()
+                            {
+                                new ShapeAnnotation() { Content = facts[i].Title }
+                            },
+                            OffsetY = 100 * (i+1),
+                            OffsetX = 500
+                        }
+                    );
+                }
             }
 
             root = facts[0].Title;
@@ -213,20 +229,20 @@
             Description = factDescription
         };
 
-        //factService.AddFact(newFact);
+        await factService.AddFact(newFact);
         facts = await factService.GetFactsByCanvasAsync(Id);
-        connections = await connService.GetConnectionsByCanvasAsync(Id);
-        nodes.Add(new Node()
+        facts = facts.OrderBy(x => x.Id).ToList();
+        Node node = new Node()
         {
             ID = facts.Last().Id.ToString(),
             Annotations = new DiagramObjectCollection<ShapeAnnotation>()
             {
                 new ShapeAnnotation() { Content = facts.Last().Title }
             },
-            OffsetY = 500,
-            OffsetX = 500
-        });
-        await diagram.RefreshDataSource();
+            OffsetY = 50,
+            OffsetX = 50
+        };
+        diagram.Nodes.Add(node);
     }
 
     private void CancelCreateConnections()
@@ -235,13 +251,36 @@
         isCreateConnectionOpen = false;
     }
 
-    private void SubmitConnections(IEnumerable<string> selectedFromFactTitle, IEnumerable<string> selectedToFactTitle)
+    private async Task SubmitConnections(IEnumerable<string> selectedFromFactTitle, IEnumerable<string> selectedToFactTitle)
     {
         connectionsCount = 1;
         Fact fromFact = facts.Where(x => x.Title == selectedFromFactTitle.First().ToString()).First();
         Fact toFact = facts.Where(x => x.Title == selectedToFactTitle.First().ToString()).First();
 
         connService.AddConnection(fromFact, toFact);
+        connections = await connService.GetConnectionsByCanvasAsync(Id);
+        if (connections.Count < 1)
+        {
+            Connector newConnector = new Connector()
+            {
+                ID = 0.ToString(),
+                SourceID = fromFact.Id.ToString(),
+                TargetID = toFact.Id.ToString(),
+                Constraints = (ConnectorConstraints)0x2363E
+            };
+            diagram.Connectors.Add(newConnector);
+        }
+        else
+        {
+            Connector newConnector = new Connector()
+            {
+                ID = connections.Last().Id.ToString(),
+                SourceID = connections.Last().StartPointId.ToString(),
+                TargetID = connections.Last().EndPointId.ToString(),
+                Constraints = (ConnectorConstraints)0x2363E
+            };
+            diagram.Connectors.Add(newConnector);
+        }
     }
 
     public void OnSelectionChanged(SelectionChangedEventArgs args)
