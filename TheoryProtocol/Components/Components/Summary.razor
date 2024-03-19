@@ -34,15 +34,14 @@ else
 
     protected override async Task OnParametersSetAsync()
     {
-        /*List<Fact> facts = await fs.GetFactsByCanvasAsync(Id);
+        summary = "";
+        List<Fact> facts = await fs.GetFactsByCanvasAsync(Id);
         StringBuilder sb = new StringBuilder();
         foreach (var fact in facts)
         {
             sb.Append(fact.Description);
         }
-        summary=await ai.Prompt(sb.ToString() + "\n Summarize");*/
-        Random rnd = new Random();
-        summary = rnd.Next(1, 101).ToString();
+        summary=await ai.Prompt(sb.ToString() + "\n Summarize");
         showCanvas = false;
     }
 

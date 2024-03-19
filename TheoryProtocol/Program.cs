@@ -49,7 +49,7 @@ builder.Services.AddScoped<UserService>(sp => new UserService(userRepository));
 builder.Services.AddScoped<CanvasService>(sp => new CanvasService(canvasRepository));
 builder.Services.AddScoped<CommentService>(sp => new CommentService(commentRepository));
 builder.Services.AddScoped<FirestoreService>();
-builder.Services.AddScoped<OpenAiService>();
+builder.Services.AddSingleton<OpenAiService>();
 
 var app = builder.Build();
 
