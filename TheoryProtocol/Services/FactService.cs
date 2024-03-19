@@ -17,7 +17,7 @@ namespace TheoryProtocol.Services
             return await _repository.GetByFieldIdAsync("CanvasId",canvasId);
         }
 
-        public async void AddFact(Fact fact)
+        public async Task AddFact(Fact fact)
         {
             int prevId = await _repository.GetIdAsync(_idDocumentName);
             fact.Id = prevId + 1;
